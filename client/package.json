@@ -63,5 +63,5 @@
     "@types/react-simple-oauth2-login": "^0.5.0",
     "@types/redux-persist": "^4.3.1"
   },
-  "proxy": "https://intwit.onrender.com"
+  "proxy": "https://intwit-28qq.onrender.com"
 }

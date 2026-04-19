@@ -34,7 +34,7 @@ const InfoProfile: React.FC<IInfoProfile> = ({ username }) => {
       const token = (auth as any)?.token || (auth as any)?.user?.token || localStorage.getItem("token");
       try {
         // 🔴 FIX 1: Pura localhost URL
-        const res = await fetch('https://intwit.onrender.com/api/reels', {
+        const res = await fetch('https://intwit-28qq.onrender.com/api/reels', {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         const data = await res.json();

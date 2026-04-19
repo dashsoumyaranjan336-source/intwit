@@ -57,7 +57,7 @@ const Profile: React.FC = () => {
     const token = (auth.user as any)?.token || (auth as any).token;
 
     try {
-      const res = await fetch(`https://intwit.onrender.com/api/user/block/${targetUserId}`, {
+      const res = await fetch(`https://intwit-28qq.onrender.com/api/user/block/${targetUserId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

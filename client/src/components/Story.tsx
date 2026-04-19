@@ -139,7 +139,7 @@ const Story: React.FC = () => {
   useEffect(() => {
     const fetchStories = async () => {
       try {
-        const res = await fetch("https://intwit.onrender.com/api/story", {
+        const res = await fetch("https://intwit-28qq.onrender.com/api/story", {
           headers: { Authorization: `Bearer ${auth.user?.token}` },
         });
         const data = await res.json();
@@ -199,7 +199,7 @@ const Story: React.FC = () => {
       const formData = new FormData();
       formData.append("images", compressedFile);
 
-      const uploadRes = await fetch("https://intwit.onrender.com/api/upload/post", {
+      const uploadRes = await fetch("https://intwit-28qq.onrender.com/api/upload/post", {
         method: "POST",
         headers: { Authorization: `Bearer ${auth.user?.token}` },
         body: formData,
@@ -209,7 +209,7 @@ const Story: React.FC = () => {
 
       if (!imageUrl) throw new Error("Cloudinary upload failed!");
 
-      const storyRes = await fetch("https://intwit.onrender.com/api/story", {
+      const storyRes = await fetch("https://intwit-28qq.onrender.com/api/story", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -243,7 +243,7 @@ const Story: React.FC = () => {
     
     if (window.confirm("Are you sure you want to delete this story?")) {
       try {
-        const res = await fetch(`https://intwit.onrender.com/api/story/${selectedStory._id}`, {
+        const res = await fetch(`https://intwit-28qq.onrender.com/api/story/${selectedStory._id}`, {
           method: "DELETE",
           headers: { Authorization: `Bearer ${auth.user?.token}` }
         });

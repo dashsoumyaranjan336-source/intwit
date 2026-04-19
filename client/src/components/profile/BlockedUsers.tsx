@@ -15,7 +15,7 @@ const BlockedUsers: React.FC = () => {
   const fetchBlocks = useCallback(async () => {
     if (!token) return;
     try {
-      const res = await axios.get("https://intwit.onrender.com/api/user/blocked_list", {
+      const res = await axios.get("https://intwit-28qq.onrender.com/api/user/blocked_list", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setBlockedList(res.data);
@@ -32,7 +32,7 @@ const BlockedUsers: React.FC = () => {
   const handleUnblock = async (userId: string) => {
     if (!token) return;
     try {
-      const res = await axios.put(`https://intwit.onrender.com/api/user/block/${userId}`, {}, {
+      const res = await axios.put(`https://intwit-28qq.onrender.com/api/user/block/${userId}`, {}, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

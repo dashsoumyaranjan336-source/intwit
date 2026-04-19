@@ -36,7 +36,7 @@ const FollowingModal: React.FC = () => {
     try {
       const token = (auth as any)?.token || (auth?.user as any)?.token; 
 
-      const res = await fetch(`https://intwit.onrender.com/api/user/unfollow/${unfollowId}`, {
+      const res = await fetch(`https://intwit-28qq.onrender.com/api/user/unfollow/${unfollowId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

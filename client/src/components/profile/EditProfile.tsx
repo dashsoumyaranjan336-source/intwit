@@ -85,7 +85,7 @@ const EditProfile: React.FC<EditProfileProps> = ({ setOnEdit }) => {
 
   const handleTogglePrivacy = async () => {
     try {
-      const res = await fetch("https://intwit.onrender.com/api/user/toggle-privacy", {
+      const res = await fetch("https://intwit-28qq.onrender.com/api/user/toggle-privacy", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -109,7 +109,7 @@ const EditProfile: React.FC<EditProfileProps> = ({ setOnEdit }) => {
   // 🔴 NAYA JADU: Yahan hum Blocked Users ko Unblock karne ka function likhenge
   const handleUnblock = async (blockedId: string) => {
     try {
-      const res = await fetch(`https://intwit.onrender.com/api/user/block/${blockedId}`, {
+      const res = await fetch(`https://intwit-28qq.onrender.com/api/user/block/${blockedId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

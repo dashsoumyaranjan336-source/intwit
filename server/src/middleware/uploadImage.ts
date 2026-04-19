@@ -26,7 +26,8 @@ const multerFilter = (req: Request, file: any, cb: FileFilterCallback) => {
 export const uploadPhoto = multer({
   storage: storage,
   fileFilter: multerFilter,
-  limits: { fileSize: 2000000 },
+  // 10MB limit set kar diya (10 * 1024 * 1024)
+  limits: { fileSize: 10485760 }, 
 });
 
 export const imgResize = async (
