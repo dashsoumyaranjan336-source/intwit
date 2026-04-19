@@ -1,0 +1,94 @@
+/* =========================================
+   NOTIFICATION BOX STYLES (DARK MODE SUPPORTED)
+   ========================================= */
+
+/* Agar tera main notification container ka background safed aa raha hai, toh ye class zaroor add karna (apne container ki class ka naam match kar lena) */
+.notification-container,
+.notification-wrapper {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  height: 100vh;
+}
+
+.notify-avatar {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  margin-right: 0.8rem;
+}
+
+.notify-avatar img {
+  width: 100%;
+  height: 100%;
+}
+
+.notify-images {
+  position: absolute;
+  right: -1.5rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-right: 0.5rem;
+}
+
+.notify-images img {
+  max-width: 100%;
+  height: auto;
+}
+
+.notify-content {
+  display: inline;
+  word-wrap: break-word;
+  color: var(--text-color); /* 🔴 Yahan pehle #262626 tha, ab variable hai */
+  font-size: 0.9rem;
+  line-height: 1.1rem;
+  width: 14rem;
+}
+
+.notify-username {
+  font-weight: 500;
+  margin-right: 0.2rem;
+  color: var(--text-color); /* 🔴 Yahan pehle #262626 tha */
+}
+
+.notify-username:hover {
+  color: var(--text-color); /* 🔴 Yahan pehle #262626 tha */
+}
+
+.notify-follow-btn {
+  height: 2rem;
+  width: 4rem;
+  background-color: #3696f9; /* Blue color dono mode mein theek lagta hai */
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #fff;
+  border: none;
+  border-radius: 0.4rem;
+  cursor: pointer;
+  position: absolute;
+  right: -1.5rem;
+  margin-right: 0.5rem;
+}
+
+.notify-follow-btn:hover {
+  background-color: #3578e5;
+}
+
+.notify-unfollow-btn {
+  height: 2rem;
+  width: 4rem;
+  background-color: var(--border-color); /* 🔴 Yahan pehle #ececec tha */
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-color); /* 🔴 Yahan pehle black tha */
+  border: none;
+  border-radius: 0.4rem;
+  cursor: pointer;
+  position: absolute;
+  right: -1.5rem;
+  margin-right: 0.5rem;
+}
+
+.notify-unfollow-btn:hover {
+  background-color: var(--card-bg); /* 🔴 Yahan pehle #dbdbdb tha */
+  border: 1px solid var(--border-color); /* Dark mode mein hover effect ke liye border */
+}

@@ -1,0 +1,212 @@
+/* --- Modern Premium Register Page Styling --- */
+
+.register-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* Premium subtle gradient background matching Login */
+  background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  padding: 40px 0; /* Thoda padding upar aur niche taaki chipka na lage */
+}
+
+.main-register-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 850px;
+  padding: 20px;
+}
+
+/* 👇 Compact Form Box 👇 */
+.form-data-register {
+  background: #ffffff;
+  padding: 35px 40px;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); /* Soft shadow */
+  width: 100%;
+  max-width: 380px; /* Width thoda sa fix kiya taaki inputs sahi se aayein */
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.logo img {
+  width: 180px;
+  height: auto;
+  object-fit: contain;
+}
+
+.register-text {
+  text-align: center;
+  color: #8e8e8e;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+/* --- Form & Inputs --- */
+.form-data-register form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Gap kam kiya taaki form lamba na lage */
+}
+
+.form-data-register input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #dbdbdb;
+  border-radius: 6px;
+  background-color: #fafafa;
+  font-size: 14px;
+  color: #262626;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.form-data-register input:focus {
+  outline: none;
+  border-color: #a8a8a8;
+  background-color: #ffffff;
+}
+
+/* --- Password Field --- */
+.pass {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.pass h6 {
+  position: absolute;
+  right: 15px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  color: #262626;
+  margin: 0;
+  user-select: none;
+}
+
+.pass h6:hover {
+  color: #8e8e8e;
+}
+
+/* --- Buttons --- */
+.form-btn {
+  background-color: #0095f6;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%; /* Ensure button takes full width */
+}
+
+.form-btn.active-btn:hover {
+  background-color: #1877f2;
+}
+
+.form-btn.pe-none, .form-btn:disabled {
+  background-color: #b2dffc;
+  cursor: default;
+  pointer-events: none;
+}
+
+/* --- OR Separator --- */
+.has-separator {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #8e8e8e;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 15px 0;
+  text-transform: uppercase;
+}
+
+.has-separator::before,
+.has-separator::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid #dbdbdb;
+}
+
+.has-separator::before {
+  margin-right: 15px;
+}
+
+.has-separator::after {
+  margin-left: 15px;
+}
+
+/* --- Validation Errors --- */
+.text-danger {
+  color: #ed4956;
+  text-align: center;
+  font-size: 13px;
+  margin-top: 5px;
+}
+
+/* --- Bottom Links --- */
+.sign-up {
+  text-align: center;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #dbdbdb;
+  font-size: 14px;
+  color: #262626;
+}
+
+.sign-up-btn {
+  color: #0095f6;
+  font-weight: 600;
+  text-decoration: none;
+  margin-left: 5px;
+}
+
+.get-the-app {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.get-the-app span {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 13px;
+  color: #262626;
+}
+
+.badges {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.badges img {
+  height: 35px;
+  cursor: pointer;
+}
+
+/* Overriding extra inline styles nicely */
+.form-data-register span a {
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.form-data-register span a:hover {
+  text-decoration: underline;
+}

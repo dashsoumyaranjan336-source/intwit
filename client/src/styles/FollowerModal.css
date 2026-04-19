@@ -1,0 +1,85 @@
+.follower-modal-wrapper {
+  height: 25rem;
+  width: 20rem;
+  background-color: var(--card-bg); /* 🔴 UPDATE: Dark mode support */
+  border-radius: 10px;
+  color: var(--text-color); /* 🔴 UPDATE: Ensure default text color */
+}
+
+.follower-modal-header {
+  height: 2.5rem;
+  border-bottom: 1.5px solid var(--border-color); /* 🔴 UPDATE */
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.follower-modal-title {
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--text-color); /* 🔴 UPDATE */
+}
+
+.follower-modal-icon {
+  background-color: transparent; /* 🔴 UPDATE: White hata diya */
+  position: absolute;
+  right: 0.5rem;
+  height: 1.5rem;
+  width: 1.5rem;
+  cursor: pointer;
+  color: var(--text-color); /* 🔴 UPDATE: Icon color */
+}
+
+.follower-modal-icon svg {
+  height: 100%;
+  width: 100%;
+  fill: var(--text-color); /* 🔴 UPDATE: SVG icon theme ke hisaab se */
+}
+
+.follower-modal-body {
+  height: calc(100% - 2.5rem);
+  overflow-y: scroll;
+}
+
+.follower-modal-user {
+  position: relative;
+  margin: 0.5rem 1rem;
+}
+
+.follower-modal-user-info {
+  display: flex;
+}
+
+.follower-modal-user-avatar {
+  margin-right: 0.5rem;
+  height: 2.75rem;
+  width: 2.75rem;
+}
+
+.follower-modal-user-avatar img {
+  height: 100%;
+  width: 100%;
+  border-radius: 50%; /* 🔴 FIX: Galti se border: 50% likha tha */
+}
+
+.follower-modal-user-username {
+  align-items: center;
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 600;
+  justify-content: flex-start;
+  line-height: 18px;
+  color: var(--text-color); /* 🔴 UPDATE: Black hata kar variable lagaya */
+  text-decoration: none;
+}
+
+.follower-modal-user-username:active {
+  color: var(--secondary-text); /* 🔴 UPDATE */
+}
+
+.follower-modal-user-fullname {
+  color: var(--secondary-text); /* 🔴 UPDATE: #737373 hata diya */
+  font-size: 14px;
+  line-height: 18px;
+}
