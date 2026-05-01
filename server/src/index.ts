@@ -24,16 +24,18 @@ import { Server } from "socket.io";
 import SocketServer from "./socketServer";
 import { ExpressPeerServer } from "peer";
 
-// Dotenv configuration - Render ke environment variables ke liye
+// 1. Configuration load karein
 dotenv.config();
+
+// 2. Database Connection Call (Ye line sabse zaroori thi!)
+dbConnect();
 
 const app = express();
 const PORT: string | number = process.env.PORT || 4000;
 
 const httpServer = createServer(app);
 
-// Socket.io setup with CORS fix (Vercel URL permanently added)
-// Is hisse ko Socket.io setup mein replace karein
+// Socket.io setup
 const io = new Server(httpServer, {
   cors: { 
     origin: ["https://intwit.vercel.app", "http://localhost:3000"], 
@@ -44,8 +46,7 @@ const io = new Server(httpServer, {
   transports: ['polling', 'websocket']
 });
 
-// Is hisse ko Express CORS middleware mein replace karein
-// Purana corsOptions delete kar dein aur sirf ye ek rakhein
+// CORS configuration
 const corsOptions = {
   origin: ["https://intwit.vercel.app", "http://localhost:3000"],
   methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
@@ -53,28 +54,12 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 };
 
-// Ise sirf ek baar call karein
-app.use(cors(corsOptions));
-
-app.use(bodyParser.json({ limit: "50mb" }));
-app.use(
-  bodyParser.urlencoded({
-    limit: "50mb",
-    extended: false,
-  })
-);
-app.use(cookieParser());
-
-
+// Middlewares Setup
 app.use(cors(corsOptions));
 app.use(bodyParser.json({ limit: "50mb" }));
-app.use(
-  bodyParser.urlencoded({
-    limit: "50mb",
-    extended: false,
-  })
-);
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: false }));
 app.use(cookieParser());
+app.use(morgan("dev")); // Debugging ke liye morgan accha hai
 
 // Socket Server Logic
 io.on("connection", (socket) => {
@@ -84,7 +69,7 @@ io.on("connection", (socket) => {
 // Create peer Server
 ExpressPeerServer(httpServer, { path: "/" });
 
-// Base Route for checking health
+// Base Route
 app.get("/", (req, res) => {
   res.json({ message: "Server is running smoothly!" });
 });
