@@ -1,4 +1,4 @@
 
-// Local Server URLs
-export const BASE_URL = "http://localhost:4000/api";
-export const BASE_URL_SOCKET = "http://localhost:4000";
+// Live Server URLs
+export const BASE_URL = "https://intwit-28qq.onrender.com/api";
+export const BASE_URL_SOCKET = "https://intwit-28qq.onrender.com";
