@@ -1,13 +1,12 @@
 import axios from "axios";
 import { BASE_URL } from "./../utils/baseUrl";
 import { config } from "../utils/axiosConfig";
-import { User } from "../utils/interface";
 
 // 🔍 SEARCH (Fixed with config() for Token)
 const search = async (search: string) => {
   const response = await axios.get(
     `${BASE_URL}/user/search?username=${search}`,
-    config() // 🔴 Ye zaroori hai taki 401 error na aaye
+    config() 
   );
 
   return response.data;

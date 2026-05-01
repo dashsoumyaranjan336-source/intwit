@@ -4,12 +4,7 @@ import { AppDispatch, RootState } from "../redux/store";
 import { AiOutlineClose } from "react-icons/ai";
 import { setCallGlobalState } from "../redux/features/GlobalStateSlice";
 import { createMessage } from "../redux/features/messagesSlice";
-import {
-  BsCameraVideoFill,
-  BsCameraVideoOffFill,
-  BsFillMicMuteFill,
-  BsFillMicFill,
-} from "react-icons/bs";
+import { BsCameraVideoFill } from "react-icons/bs"; // Sirf wahi rakha hai jo actual mein use ho raha hai
 import { MdCallEnd, MdCall } from "react-icons/md";
 import { useLocation } from "react-router-dom";
 import { createCall } from "../redux/features/callSlice";
@@ -163,15 +158,14 @@ const Call: React.FC = () => {
           });
         });
         setAnswer(true);
-        // setNewCall(newCall)
       });
       return () => {
         peer.data!.removeListener("call");
       };
     }
   }, [call.data, peer.data]);
-  // Stream Media
 
+  // Stream Media
   const openStream = (video: boolean, audio: boolean) => {
     const config = { audio: audio, video: video };
     return navigator.mediaDevices.getUserMedia(config);
@@ -185,8 +179,8 @@ const Call: React.FC = () => {
     video!.srcObject = stream;
     video!.play();
   };
-  // Disconnected
 
+  // Disconnected
   useEffect(() => {
     if (socket.data) {
       socket.data!.on("callerDisconnect", () => {
@@ -219,13 +213,6 @@ const Call: React.FC = () => {
     }
   }, [call.data, dispatch, location.pathname, socket.data, tracks]);
 
-  //
-
-  // const handleStream = () => {
-  //   dispatch(createCall({ ...call.data!, video: !call.data!.video }));
-  //   handleAnswer;
-  // };
-
   return (
     <>
       {isCallGlobalState && call.data! && (
@@ -256,19 +243,6 @@ const Call: React.FC = () => {
                 />
 
                 <div className="call-icon">
-                  {/* <div className="call-icon-camera call-icon-mic absolute-center">
-                    <BsCameraVideoFill />
-                  </div> */}
-
-                  {/* {call.data!.audio ? (
-                    <div className="call-icon-camera call-icon-mic absolute-center">
-                      <BsFillMicFill onClick={handleAnswer} />
-                    </div>
-                  ) : (
-                    <div className="call-icon-camera absolute-center">
-                      <BsFillMicMuteFill onClick={handleAnswer} />
-                    </div>
-                  )} */}
                   <div
                     className="call-icon-camera call-icon-end absolute-center"
                     onClick={handleEndCall}
@@ -309,19 +283,6 @@ const Call: React.FC = () => {
                   <div className="call-text">Calling ...</div>
                 </div>
                 <div className="call-icon">
-                  {/* <div className="call-icon-camera absolute-center">
-                    <BsCameraVideoOffFill onClick={handleAnswer} />
-                  </div> */}
-
-                  {/* {call.data!.audio ? (
-                    <div className="call-icon-camera call-icon-mic absolute-center">
-                      <BsFillMicFill onClick={handleAnswer} />
-                    </div>
-                  ) : (
-                    <div className="call-icon-camera call-icon-mic absolute-center">
-                      <BsFillMicMuteFill onClick={handleAnswer} />
-                    </div>
-                  )} */}
                   <div
                     className="call-icon-camera call-icon-end absolute-center"
                     onClick={handleEndCall}
@@ -346,19 +307,6 @@ const Call: React.FC = () => {
                 <div className="call-text">Calling ...</div>
               </div>
               <div className="call-icon">
-                {/* {call.data!.video ? (
-                  <div className="call-icon-camera call-icon-mic absolute-center">
-                    <BsCameraVideoFill />
-                  </div>
-                ) : (
-                  <div className="call-icon-camera absolute-center">
-                    <BsCameraVideoOffFill />
-                  </div>
-                )}
-
-                <div className="call-icon-camera call-icon-mic absolute-center">
-                  <BsFillMicFill />
-                </div> */}
                 <div
                   className="call-icon-camera call-icon-end absolute-center"
                   onClick={handleEndCall}
@@ -405,4 +353,5 @@ const Call: React.FC = () => {
     </>
   );
 };
+
 export default Call;
