@@ -40,9 +40,9 @@
 .home-post-icon {
   cursor: pointer;
   margin-top: 1rem;
-  margin-right: 0.8rem; /* Icons ke beech gap */
-  color: var(--text-color); 
-  transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
+  margin-right: 1rem;
+  margin-left: 5px; /* Ye thoda right push karega */
+  
 }
 .home-post-icon:hover {
   color: var(--secondary-text);
