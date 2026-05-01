@@ -1,6 +1,9 @@
 .home-wrapper {
-  width: 100%;
+   .home-wrapper {
+  margin-left: 280px; /* Sidebar ki width ke barabar */
   display: flex;
+  flex-direction: column;
+}
 }
 .story-post-wrapper {
   max-width: 36rem;
@@ -10,28 +13,37 @@
 
 /*--------POST---------*/
 .post-wrapper {
-  max-width: 32rem;
+  max-width: 32rem; /* Thodi zyada chauRai professional look ke liye */
   width: 100%;
-  /* Fixed margin left lagaya taaki sidebar kabhi overlap na kare */
-  margin-left: 320px !important; 
-  margin-top: 3rem;
-  margin-bottom: 3rem;
-  padding: 0 1.5rem !important; /* Andar ki taraf thodi jagah */
+  /* Margin ko pixels mein fixed aur bada karein. 
+     (350px is a very safe value to clear most sidebars). */
+  margin: 3rem auto 3rem 350px !important; 
   position: relative;
+  /* Isse poora context (avatar included) right shift ho jayega */
+  padding-left: 20px !important; 
+  padding-right: 15px !important;
+  border: 1px solid #dbdbdb;
+  border-radius: 8px;
+  background: white;
 }
 .home-post-avatar {
   border-radius: 50%;
   width: 2.5rem;
   height: 2.5rem;
   cursor: pointer;
+  /* Ye Avatar ko sidebar se door dhakelega */
+  margin-left: 10px;
 }
 .home-post-text {
+  .home-post-text {
   color: var(--text-color); 
   font-size: 0.9rem;
   font-weight: 600;
   line-height: 1.1rem;
   cursor: pointer;
-  margin-left: 15px !important; /* "asutosh" pura dikhane ke liye */
+  /*  Username ko Avatar ke saath space dene ke liye */
+  margin-left: 10px; 
+}
 }
 .home-post-text:hover {
   color: var(--secondary-text); 
@@ -104,12 +116,28 @@
 }
 .home-post-comment {
   position: relative;
-  padding-right: 2.5rem;
+  padding-right: 3rem; /* Right side icon ke liye thodi zyada jagah */
+  /*  Isse "Add a comment" ka 'A' sidebar ke bahar aa jayega */
+  padding-left: 10px; 
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  border-top: 1px solid #efefef; /* Post aur comment ke beech separation */
 }
 .home-post-comment-icon {
   position: absolute;
-  right: 0;
-  top: 0rem;
+  right: 10px; /* Edge se thoda andar rakha taaki kate nahi */
+  top: 50%;
+  transform: translateY(-50%); /* Icon ko perfect vertical center karne ke liye */
+  cursor: pointer;
+}
+.home-post-comment input {
+  padding-left: 5px !important;
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 0.9rem;
 }
 
 /*--------SUGGESTION USER---------*/
