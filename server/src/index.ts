@@ -33,27 +33,38 @@ const PORT: string | number = process.env.PORT || 4000;
 const httpServer = createServer(app);
 
 // Socket.io setup with CORS fix (Vercel URL permanently added)
+// Is hisse ko Socket.io setup mein replace karein
 const io = new Server(httpServer, {
   cors: { 
     origin: ["https://intwit.vercel.app", "http://localhost:3000"], 
-    methods: ["GET", "POST", "PATCH", "PUT"], // PATCH aur PUT bhi add karein follow ke liye
+    methods: ["GET", "POST", "PATCH", "PUT", "DELETE"], 
     credentials: true
   },
-  transports: ['polling', 'websocket'] 
+  allowEIO3: true,
+  transports: ['polling', 'websocket']
 });
 
-// Database Connection
-dbConnect();
-
-// Middleware
-app.use(morgan("dev"));
-
+// Is hisse ko Express CORS middleware mein replace karein
+// Purana corsOptions delete kar dein aur sirf ye ek rakhein
 const corsOptions = {
-  // Yahan Express CORS ke array mein bhi Vercel ka link daal diya gaya hai
-  origin: ["https://intwit.vercel.app", process.env.URL_FRONTEND as string, "http://localhost:3000"],
+  origin: ["https://intwit.vercel.app", "http://localhost:3000"],
+  methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
   credentials: true,
   optionsSuccessStatus: 200,
 };
+
+// Ise sirf ek baar call karein
+app.use(cors(corsOptions));
+
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(
+  bodyParser.urlencoded({
+    limit: "50mb",
+    extended: false,
+  })
+);
+app.use(cookieParser());
+
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json({ limit: "50mb" }));
