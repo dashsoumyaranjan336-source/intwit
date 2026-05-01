@@ -31,6 +31,7 @@
   font-weight: 600;
   line-height: 1.1rem;
   cursor: pointer;
+  margin-left: 15px !important; /* "asutosh" pura dikhane ke liye */
 }
 .home-post-text:hover {
   color: var(--secondary-text); 
@@ -40,9 +41,10 @@
 .home-post-icon {
   cursor: pointer;
   margin-top: 1rem;
-  margin-right: 1rem;
-  margin-left: 5px; /* Ye thoda right push karega */
-  
+  margin-right: 0.8rem;
+  margin-left: 15px !important; /* isse heart pura dikhega */
+  color: var(--text-color);
+  transition: transform 0.2s ease-in-out;
 }
 .home-post-icon:hover {
   color: var(--secondary-text);
@@ -57,7 +59,8 @@
 .home-post-icon-unlike {
   cursor: pointer;
   margin-top: 1rem;
-  transition: transform 0.2s ease-in-out, filter 0.2s ease-in-out;
+  margin-left: 15px !important; /*  YE ADD KAREIN */
+  transition: transform 0.2s ease-in-out;
 }
 /*  Unlike (Like) button ke liye special heart pop aur glow */
 .home-post-icon-unlike:hover {
@@ -94,6 +97,7 @@
   font-size: 14px;
   line-height: 18px;
   cursor: pointer;
+  margin-left: 15px !important; /* "likes" text ke liye */
 }
 .home-post-quantity-comment:active {
   color: var(--text-color);
