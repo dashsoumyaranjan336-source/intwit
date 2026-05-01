@@ -40,6 +40,7 @@ const io = new Server(httpServer, {
     methods: ["GET", "POST", "PUT", "DELETE"], 
     credentials: true
   },
+  transports: ['polling', 'websocket']
 });
 
 // Database Connection
