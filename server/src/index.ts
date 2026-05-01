@@ -32,12 +32,12 @@ const PORT: string | number = process.env.PORT || 4000;
 
 const httpServer = createServer(app);
 
-// Socket.io setup with CORS fix
+// Socket.io setup with CORS fix (Vercel URL permanently added)
 const io = new Server(httpServer, {
   cors: { 
-    // Yahan array banaya aur dono URL daal diye
-    origin: [process.env.URL_FRONTEND as string, "http://localhost:3000"], 
-    methods: ["GET", "POST"],
+    // Yahan array mein direct Vercel ka live link daal diya gaya hai
+    origin: ["https://intwit.vercel.app", process.env.URL_FRONTEND as string, "http://localhost:3000"], 
+    methods: ["GET", "POST", "PUT", "DELETE"], 
     credentials: true
   },
 });
@@ -49,8 +49,8 @@ dbConnect();
 app.use(morgan("dev"));
 
 const corsOptions = {
-  // Yahan bhi array banaya
-  origin: [process.env.URL_FRONTEND as string, "http://localhost:3000"],
+  // Yahan Express CORS ke array mein bhi Vercel ka link daal diya gaya hai
+  origin: ["https://intwit.vercel.app", process.env.URL_FRONTEND as string, "http://localhost:3000"],
   credentials: true,
   optionsSuccessStatus: 200,
 };
