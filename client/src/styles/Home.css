@@ -10,11 +10,13 @@
 
 /*--------POST---------*/
 .post-wrapper {
-  max-width: 30rem;
+  max-width: 32rem;
   width: 100%;
-  /*  Sidebar overlap se bachne ke liye margin adjust kiya aur padding add ki */
-  margin: 3rem auto 3rem calc(25vw + 2rem); 
-  padding: 0 1rem; /* Like button ko cut hone se bachayega */
+  /* Fixed margin left lagaya taaki sidebar kabhi overlap na kare */
+  margin-left: 320px !important; 
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+  padding: 0 1.5rem !important; /* Andar ki taraf thodi jagah */
   position: relative;
 }
 .home-post-avatar {
