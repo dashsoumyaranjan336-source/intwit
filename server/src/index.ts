@@ -35,12 +35,11 @@ const httpServer = createServer(app);
 // Socket.io setup with CORS fix (Vercel URL permanently added)
 const io = new Server(httpServer, {
   cors: { 
-    // Yahan array mein direct Vercel ka live link daal diya gaya hai
-    origin: ["https://intwit.vercel.app", process.env.URL_FRONTEND as string, "http://localhost:3000"], 
-    methods: ["GET", "POST", "PUT", "DELETE"], 
+    origin: ["https://intwit.vercel.app", "http://localhost:3000"], 
+    methods: ["GET", "POST", "PATCH", "PUT"], // PATCH aur PUT bhi add karein follow ke liye
     credentials: true
   },
-  transports: ['polling', 'websocket']
+  transports: ['polling', 'websocket'] 
 });
 
 // Database Connection
