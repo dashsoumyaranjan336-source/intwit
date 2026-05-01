@@ -3,11 +3,11 @@ import asyncHandler from "express-async-handler";
 import User from "../models/userModel";
 import { IReqAuth } from "../config/interface";
 
-// 🔍 1. USER SEARCH KARNE KE LIYE (🔥 ULTIMATE BACKEND FIX)
+// 🔍 1. USER SEARCH KARNE KE LIYE 
 const searchUser = asyncHandler(
   async (req: IReqAuth, res: Response): Promise<void> => { 
     try {
-      // 🔴 JADU STEP 1: Logged-in user ki block list nikalo
+      //  STEP 1: Logged-in user ki block list nikalo
       let excludeIds: any[] = [];
       if (req.user) {
         const currentUser = await User.findById(req.user._id);
@@ -16,7 +16,7 @@ const searchUser = asyncHandler(
         excludeIds = [...blockedUsers, req.user._id]; 
       }
 
-      // 🔴 JADU STEP 2: Database ko bolo un IDs ko ignore kare ($nin)
+      // STEP 2: Database ko bolo un IDs ko ignore kare ($nin)
       const users = await User.find({
         username: { $regex: req.query.username },
         _id: { $nin: excludeIds } 
@@ -31,7 +31,7 @@ const searchUser = asyncHandler(
   }
 );
 
-// 👤 2. KISI SPECIFIC USER KI PROFILE LENI HO
+//  2. KISI SPECIFIC USER KI PROFILE LENI HO
 const getUser = asyncHandler(
   async (req: Request, res: Response): Promise<void> => {
     try {
@@ -54,7 +54,7 @@ const getUser = asyncHandler(
   }
 );
 
-// 💡 3. SUGGESTIONS WALE USERS (🔥 Fixed & Verified)
+//  3. SUGGESTIONS WALE USERS ( Fixed & Verified)
 const getSuggestionUser = asyncHandler(
   async (req: IReqAuth, res: Response): Promise<void> => {
     try {
@@ -69,7 +69,7 @@ const getSuggestionUser = asyncHandler(
           // 1. Woh meri following, meri block list mein na ho, aur main khud na ho
           { _id: { $nin: [...following, ...blockedUsers, req.user!._id] } },
           
-          // 2. JADU STEP: Woh banda suggestions mein na aaye JISNE MUJHE block kiya hai
+          // 2.  STEP: Woh banda suggestions mein na aaye JISNE MUJHE block kiya hai
           { blockedUsers: { $ne: req.user!._id } } 
         ]
       })
@@ -84,11 +84,11 @@ const getSuggestionUser = asyncHandler(
   }
 );
 
-// ➕ 4. FOLLOW USER (🔥 BUG FIX: Spam Notification Issue)
+//  4. FOLLOW USER ( BUG FIX: Spam Notification Issue)
 const followUser = asyncHandler(
   async (req: IReqAuth, res: Response): Promise<void> => {
     try {
-      // 🚨 NAYA CHECK: findOne use kiya (jyada fast hai) aur check strong kiya
+      //  CHECK: findOne use kiya (jyada fast hai) aur check strong kiya
       const existingUser = await User.findOne({
         _id: req.params.id,
         followers: req.user!._id,
@@ -125,7 +125,7 @@ const followUser = asyncHandler(
   }
 );
 
-// ➖ 5. UNFOLLOW USER
+//  5. UNFOLLOW USER
 const unfollowUser = asyncHandler(
   async (req: IReqAuth, res: Response): Promise<void> => {
     try {
@@ -153,7 +153,7 @@ const unfollowUser = asyncHandler(
   }
 );
 
-// ❌ 10. REMOVE FOLLOWER
+//  10. REMOVE FOLLOWER
 const removeFollower = asyncHandler(
   async (req: IReqAuth, res: Response): Promise<void> => {
     try {
@@ -178,7 +178,7 @@ const removeFollower = asyncHandler(
   }
 );
 
-// 💾 6. SAVE POST
+//  6. SAVE POST
 const savePost = asyncHandler(
   async (req: IReqAuth, res: Response): Promise<void> => {
     try {
@@ -209,7 +209,7 @@ const savePost = asyncHandler(
   }
 );
 
-// 🔓 7. UNSAVE POST
+//  7. UNSAVE POST
 const unSavePost = asyncHandler(
   async (req: IReqAuth, res: Response): Promise<void> => {
     try {
@@ -231,7 +231,7 @@ const unSavePost = asyncHandler(
   }
 );
 
-// 🔒 8. TOGGLE PRIVACY 
+//  8. TOGGLE PRIVACY 
 const togglePrivacy = asyncHandler(
   async (req: IReqAuth, res: Response): Promise<void> => {
     try {
@@ -254,7 +254,7 @@ const togglePrivacy = asyncHandler(
   }
 );
 
-// 🚫 9. BLOCK/UNBLOCK USER 
+//  9. BLOCK/UNBLOCK USER 
 const blockUser = asyncHandler(
   async (req: IReqAuth, res: Response): Promise<void> => {
     try {
@@ -293,7 +293,7 @@ const blockUser = asyncHandler(
   }
 );
 
-// 🚫 11. GET BLOCKED USERS LIST
+//  11. GET BLOCKED USERS LIST
 const getBlockedUsers = asyncHandler(
   async (req: IReqAuth, res: Response): Promise<void> => {
     try {

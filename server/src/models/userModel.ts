@@ -50,7 +50,7 @@ const userSchema = new mongoose.Schema(
     post: [{ type: mongoose.Types.ObjectId, ref: "post" }],
     saved: [{ type: mongoose.Types.ObjectId, ref: "post" }],
     
-    // 🔴 YAHAN ADD KIYA HAI MAIN FIX 👇
+    //  MAIN FIX 
     blockedUsers: [{ type: mongoose.Types.ObjectId, ref: "user" }],
     isPrivate: { type: Boolean, default: false },
 

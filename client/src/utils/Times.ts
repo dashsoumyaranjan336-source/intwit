@@ -168,3 +168,30 @@ export function getTimesMessagesString(date: string): string {
       .padStart(2, "0")} ${amPm}`;
   }
 }
+export const getInstagramDate = (dateString: string) => {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+  const minute = 60;
+  const hour = minute * 60;
+  const day = hour * 24;
+  const week = day * 7;
+
+  // Agar bohot recent hai toh purana style
+  if (diffInSeconds < minute) return "JUST NOW";
+  if (diffInSeconds < hour) return `${Math.floor(diffInSeconds / minute)} MINUTES AGO`;
+  if (diffInSeconds < day) return `${Math.floor(diffInSeconds / hour)} HOURS AGO`;
+  if (diffInSeconds < week) return `${Math.floor(diffInSeconds / day)} DAYS AGO`;
+
+  //  1 Hafte se purani post ke liye Exact Date (Instagram Style) 
+  const options: Intl.DateTimeFormatOptions = { month: 'long', day: 'numeric' };
+  
+  // Agar pichle saal ki post hai, toh saal (Year) bhi dikhayenge
+  if (now.getFullYear() !== date.getFullYear()) {
+    options.year = 'numeric';
+  }
+
+  // Result aayega: "APRIL 24" ya "APRIL 24, 2025"
+  return date.toLocaleDateString('en-US', options).toUpperCase();
+};

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import EditProfile from "./EditProfile";
@@ -13,9 +13,9 @@ import { IInfoProfile } from "../../utils/interface";
 const InfoProfile: React.FC<IInfoProfile> = ({ username }) => {
   const [onEdit, setOnEdit] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [reelsCount, setReelsCount] = useState<number>(0);
 
-  const { auth, user, socket } = useSelector((state: RootState) => state);
+  // 🔥 FIX 1: Humne Redux se 'post' state ko bhi yahan import kar liya
+  const { auth, user, socket, post } = useSelector((state: RootState) => state);
   const dispatch: AppDispatch = useDispatch();
 
   const verifierUsername = username === auth?.user?.username;
@@ -25,37 +25,11 @@ const InfoProfile: React.FC<IInfoProfile> = ({ username }) => {
     window.open(url, "_blank", "noreferrer");
   };
 
-  // 🔴 MAGIC: Profile khulte hi check karega ki us user ki kitni Reels hain
-  useEffect(() => {
-    const fetchReelsCount = async () => {
-      const profileId = verifierUsername ? auth?.user?._id : user?.data?._id;
-      if (!profileId) return;
-
-      const token = (auth as any)?.token || (auth as any)?.user?.token || localStorage.getItem("token");
-      try {
-        // 🔴 FIX 1: Pura localhost URL
-        const res = await fetch('https://intwit-28qq.onrender.com/api/reels', {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const data = await res.json();
-        
-        if (data.reels) {
-           // 🔴 FIX 2: String() me convert karke match kiya taaki fail na ho
-           const myReels = data.reels.filter((r: any) => 
-             String(r.user?._id) === String(profileId) || String(r.user) === String(profileId)
-           );
-           setReelsCount(myReels.length);
-        }
-      } catch (err) {
-        console.log("Failed to count reels", err);
-      }
-    };
-    fetchReelsCount();
-  }, [auth, user, verifierUsername]);
-
-  // Total Posts = Normal Posts + Reels Count
-  const normalPostsCount = verifierUsername ? (auth?.user?.post?.length || 0) : (user?.data?.post?.length || 0);
-  const totalPostsCount = normalPostsCount + reelsCount;
+  // 🔥 FIX 2: Asli Jadu! Ab koi API call ki zaroorat nahi. 
+  // Redux mein jitne bhi items (Photos + Reels) hain, unki ginti seedha yahan dikhegi!
+  const p: any = post;
+  const rawPosts = p.userPosts || p.posts || p.data || [];
+  const totalPostsCount = rawPosts.length;
 
   return (
     <div className="profile-details-section">
@@ -88,13 +62,13 @@ const InfoProfile: React.FC<IInfoProfile> = ({ username }) => {
                 </div>
               ) : (
                 <div className="d-flex align-items-center">
-                  {/* 🔥 Sirf Follow button rahega, Block button hata diya */}
                   {user?.data && <FollowBtn user={user.data} />}
                 </div>
               )}
             </div>
 
             <div className="posts-followers-details-wrapper d-flex mt-3">
+              {/* 🔥 POST COUNT YAHAN DYNAMICALLY AAYEGA 🔥 */}
               <div className="total-posts-wrapper total-wrapper absolute-center">
                 <span className="font-w-500 total-number">
                   {totalPostsCount}

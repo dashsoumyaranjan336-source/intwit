@@ -7,7 +7,7 @@ const storyCtrl = {
   // 1. Nayi story upload karna (Updated with Audio)
   createStory: asyncHandler(async (req: IReqAuth, res: Response): Promise<void> => {
     try {
-      // 🔴 NAYA: Body se audioUrl bhi nikalna hai
+      //  Body se audioUrl bhi nikalna hai
       const { image, audioUrl } = req.body;
 
       if (!image) {
@@ -18,7 +18,7 @@ const storyCtrl = {
       const newStory = new Stories({
         user: req.user?._id,
         image,
-        audioUrl: audioUrl || "", // 🔴 NAYA: Database mein save kiya
+        audioUrl: audioUrl || "", //  Database mein save kiya
       });
 
       await newStory.save();

@@ -18,7 +18,7 @@ const Home: React.FC = () => {
         {/* Posts wala area */}
         <div className="posts-section" style={{ flex: "1", maxWidth: "630px" }}>
           
-          {/* 🔥 NEW INSTAGRAM STORIES BAR YAHAN DIKHEGA 🔥 */}
+          {/*  NEW INSTAGRAM STORIES BAR YAHAN DIKHEGA  */}
           <StoriesBar />
           
           <PostList />

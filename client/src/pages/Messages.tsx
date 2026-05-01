@@ -3,8 +3,8 @@ import LeftSide from "../components/messages/LeftSide";
 import BoxChat from "../components/messages/BoxChat";
 import Helmet from "../components/Helmet";
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux"; // 🔴 Import useSelector
-import { RootState } from "../redux/store"; // 🔴 Import RootState
+import { useSelector } from "react-redux"; //  Import useSelector
+import { RootState } from "../redux/store"; //  Import RootState
 
 const Messages: React.FC = () => {
   const { id } = useParams() as {
@@ -13,10 +13,10 @@ const Messages: React.FC = () => {
 
   const { conversation, auth } = useSelector((state: RootState) => state);
 
-  // 🔴 1. Local Storage se block list nikalo
+  //  1. Local Storage se block list nikala
   const localBlocked = JSON.parse(localStorage.getItem("myBlockedUsers") || "[]");
 
-  // 🔴 2. Check karo ki current chat wala banda blocked toh nahi hai
+  //  2. Check karo ki current chat wala banda blocked toh nahi hai
   const currentConv = conversation.data?.find((obj) => obj._id === id);
   const recipient = currentConv?.recipients.find((r: any) => r._id !== auth.user?._id);
   const isBlocked = recipient && localBlocked.includes(recipient._id.toString());
@@ -27,7 +27,7 @@ const Messages: React.FC = () => {
         <div className="messages-container">
           <LeftSide />
           
-          {/* 🔴 3. Agar blocked hai toh BoxChat ki jagah Blocked UI dikhao */}
+          {/*  3. Agar blocked hai toh BoxChat ki jagah Blocked UI dikha */}
           {isBlocked ? (
             <div className="absolute-center w-100 text-center p-5 bg-white">
                <div style={{ fontSize: "3rem" }}>🚫</div>

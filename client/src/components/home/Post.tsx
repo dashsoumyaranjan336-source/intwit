@@ -259,11 +259,22 @@ const Post: React.FC<PostProps> = ({ post }) => {
     });
   };
 
-  // 🔥 ADDED: Direct Send function
   const handleSendToUser = (username: string) => {
     alert(`✅ Sent to @${username}`);
     setShowShareModal(false);
   };
+
+  // 🔥 MAGIC FIX: Music ka Dabba yahan khulega!
+  let parsedMusic: any = null;
+  if ((post as any).music) {
+    try {
+      parsedMusic = typeof (post as any).music === "string" 
+        ? JSON.parse((post as any).music) 
+        : (post as any).music;
+    } catch (error) {
+      console.log("Music dabba kholne mein dikkat:", error);
+    }
+  }
 
   return (
     <div className="mb-4" style={{ borderBottom: "1px solid #dbdbdb", position: "relative" }}>
@@ -380,26 +391,47 @@ const Post: React.FC<PostProps> = ({ post }) => {
         </div>
       </div>
 
+      {/* 🔥 FIXED: Yahan Image aur Video dono ka support add kiya gaya hai */}
       {post.images && post.images.length > 0 && (
         <div>
           <Swiper
             navigation={true}
             modules={[Navigation]}
             className="mySwiper absolute-center"
-            style={{ borderRight: "1px solid #dbdbdb" }}
+            style={{ borderRight: "1px solid #dbdbdb", backgroundColor: "#000" }}
           >
-            {post.images.map((image, index) => (
+            {post.images.map((url, index) => (
               <SwiperSlide key={index}>
-                <img src={image} alt={`post-img-${index}`} />
+                {/* Check kar rahe hain ki URL video hai ya image */}
+                {url.match(/\.(mp4|webm|ogg|mov)$/i) || url.includes("video/upload") ? (
+                  <video 
+                    src={url} 
+                    className="w-100 h-100" 
+                    controls 
+                    autoPlay 
+                    loop
+                    muted={false}
+                    style={{ objectFit: "contain", maxHeight: "585px" }}
+                  />
+                ) : (
+                  <img src={url} alt={`post-img-${index}`} style={{ objectFit: "contain" }} />
+                )}
               </SwiperSlide>
             ))}
           </Swiper>
         </div>
       )}
 
-      {(post as any).music && (
+      {/* 🔥 MAGIC FIX: Ab player directly 'url' bajayega */}
+      {parsedMusic && parsedMusic.url && (
         <div className="mt-2 mb-2 px-3">
-          <audio controls src={(post as any).music} className="w-100" style={{ height: '35px', borderRadius: '20px' }} />
+          <audio controls src={parsedMusic.url} className="w-100" style={{ height: '35px', borderRadius: '20px' }} />
+          {/* Gaane ka naam bhi dikha dete hain */}
+          {parsedMusic.name && (
+            <div style={{ fontSize: '11px', color: 'gray', marginTop: '4px', marginLeft: '5px', fontWeight: 'bold' }}>
+              🎵 {parsedMusic.name}
+            </div>
+          )}
         </div>
       )}
 

@@ -113,7 +113,7 @@ const reelCtrl = {
         }
     },
 
-    // 🔥 6. NAYA: Reel Delete karne ka logic
+    //  6. Reel Delete karne ka logic
     deleteReel: async (req: any, res: Response) => {
         try {
             const reel = await Reels.findOneAndDelete({

@@ -38,7 +38,7 @@
 .notify-content {
   display: inline;
   word-wrap: break-word;
-  color: var(--text-color); /* 🔴 Yahan pehle #262626 tha, ab variable hai */
+  color: var(--text-color); 
   font-size: 0.9rem;
   line-height: 1.1rem;
   width: 14rem;
@@ -47,11 +47,11 @@
 .notify-username {
   font-weight: 500;
   margin-right: 0.2rem;
-  color: var(--text-color); /* 🔴 Yahan pehle #262626 tha */
+  color: var(--text-color); 
 }
 
 .notify-username:hover {
-  color: var(--text-color); /* 🔴 Yahan pehle #262626 tha */
+  color: var(--text-color); 
 }
 
 .notify-follow-btn {
@@ -76,10 +76,10 @@
 .notify-unfollow-btn {
   height: 2rem;
   width: 4rem;
-  background-color: var(--border-color); /* 🔴 Yahan pehle #ececec tha */
+  background-color: var(--border-color); 
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--text-color); /* 🔴 Yahan pehle black tha */
+  color: var(--text-color); 
   border: none;
   border-radius: 0.4rem;
   cursor: pointer;
@@ -89,6 +89,6 @@
 }
 
 .notify-unfollow-btn:hover {
-  background-color: var(--card-bg); /* 🔴 Yahan pehle #dbdbdb tha */
+  background-color: var(--card-bg); /* 
   border: 1px solid var(--border-color); /* Dark mode mein hover effect ke liye border */
 }

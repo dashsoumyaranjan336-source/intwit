@@ -45,7 +45,19 @@ const PostsProfile = () => {
     dispatch(setPostModalId(id));
   };
 
-  const allPosts = post.data || [];
+  const p: any = post;
+  const rawPosts = p.userPosts || p.posts || p.data || [];
+  
+  // 🔥 YEH HAI ASLI JADUU: Yahan filter lagaya hai taaki VIDEOS yahan na dikhein!
+  const allPosts = rawPosts.filter((val: any) => {
+    if (!val.images || val.images.length === 0) return true; // Text post pass
+    
+    // Check karo kya file video hai? (Bohot simple check)
+    const url = val.images[0].toLowerCase();
+    const isVideo = url.includes(".mp4") || url.includes(".webm") || url.includes("video/upload");
+    
+    return !isVideo; // Agar video hai toh isko POSTS tab se uda do! (sirf normal photos bachengi)
+  });
 
   return (
     <div className="posts-list-container" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -53,11 +65,11 @@ const PostsProfile = () => {
         <PostsProfileSkeleton />
       ) : allPosts && allPosts.length > 0 ? (
         <div className="profile-grid-system" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '4px' }}>
-          {allPosts.map((value) => {
+          {allPosts.map((value: any) => {
             const isTextPost = !value.images || value.images.length === 0 || value.images[0] === "";
 
             if (isTextPost) {
-              /* --- 🔥 TWITTER STYLE TEXT POST (Full Row) --- */
+              /* --- 🔥 TWITTER STYLE TEXT POST --- */
               return (
                 <div
                   key={value._id}
@@ -84,10 +96,8 @@ const PostsProfile = () => {
                       <span style={{ color: '#536471', fontSize: '13px' }}>@{value.user?.username || auth.user?.username}</span>
                     </div>
                     <p style={{ marginTop: '5px', fontSize: '15px', color: '#0f1419', whiteSpace: 'pre-wrap' }}>
-                      {/* 🔥 Yahan function apply kiya hai */}
                       {renderContentWithMentions(value.content)}
                     </p>
-                    {/* Action Buttons */}
                     <div style={{ display: 'flex', justifyContent: 'space-between', maxWidth: '300px', marginTop: '10px', color: '#536471' }}>
                        <div className="d-flex align-items-center gap-1"><FaComment size={14} /> {value.comments?.length}</div>
                        <div className="d-flex align-items-center gap-1"><FaRetweet size={16} /> 0</div>
@@ -99,7 +109,7 @@ const PostsProfile = () => {
               );
             }
 
-            /* --- 📸 INSTAGRAM STYLE IMAGE POST (Grid) --- */
+            /* --- 📸 INSTAGRAM STYLE IMAGE POST (Yahan se video hata diya gaya hai) --- */
             return (
               <div
                 className="explore-post-container cur-point"

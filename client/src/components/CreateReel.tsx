@@ -1,291 +1,321 @@
-import { useState, useEffect, useRef, createRef } from "react";
-import { AiOutlineCamera, AiOutlineClose } from "react-icons/ai";
+import React, { useState, useRef, useEffect } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper";
-import "swiper/css";
-import "swiper/css/navigation";
-import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
+import { UploadImg } from "./Icons";
 import { useDispatch, useSelector } from "react-redux";
-
 import { AppDispatch, RootState } from "../redux/store";
-import { setIsUploadGlobalState } from "../redux/features/GlobalStateSlice";
-import { EmojiIcon, UploadImg } from "./Icons";
-import { deleteImgPost, uploadImgPost } from "../redux/features/uploadImgSlice";
+import { uploadImgPost } from "../redux/features/uploadImgSlice";
 import { createPost } from "../redux/features/postSlice";
 import { createNotification } from "../redux/features/notificationSlice";
 import Load from "../images/loading.gif";
-import { setCreatePost } from "../redux/features/authSlice";
 
 let schema = yup.object().shape({
   content: yup.string(),
 });
 
-const CreatePost: React.FC = () => {
-  const { auth, upload, socket, globalState } = useSelector((state: RootState) => state);
-  const { message } = upload;
-  const { isUploadGlobalState } = globalState;
-  
+const CreateReel: React.FC = () => {
+  const { auth, socket } = useSelector((state: RootState) => state);
   const dispatch: AppDispatch = useDispatch();
-  const ref = createRef<HTMLInputElement>();
-  const musicRef = createRef<HTMLInputElement>(); 
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const refCanvas = useRef<HTMLCanvasElement>(null);
-  
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
-  const [showMentionDropdown, setShowMentionDropdown] = useState(false);
-  const [mentionQuery, setMentionQuery] = useState("");
-  const [mentionUsers, setMentionUsers] = useState<any[]>([]);
 
-  useEffect(() => {
-    if (auth.user) {
-      let combined: any[] = [...(auth.user.followers || []), ...(auth.user.following || [])];
-      
-      if (combined.length === 0) {
-        // 🔥 FIX: Added 'as any' to prevent type errors
-        combined = [{ username: "karan" } as any, { username: "rakesh" } as any, { username: "sourav" } as any];
-      }
-      
-      const uniqueUsers = Array.from(new Set(combined.map(a => a.username)))
-        .map(username => combined.find(a => a.username === username));
-      
-      setMentionUsers(uniqueUsers);
-    }
-  }, [auth.user]);
-
-  const handleClick = () => ref.current?.click();
-
-  const [images, setImages] = useState<string[]>([]);
-  const [music, setMusic] = useState<File | null>(null); 
-  const [emoji, setEmoji] = useState<boolean>(false);
-  const [tracks, setTracks] = useState<MediaStreamTrack | null>(null);
-  const [stream, setStream] = useState<boolean>(false);
+  // 🎥 Video States
+  const [videoUrl, setVideoUrl] = useState<string | null>(null); // Cloudinary URL
+  const [localVideoPreview, setLocalVideoPreview] = useState<string | null>(null); // Local preview
+  const [isOriginalMuted, setIsOriginalMuted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const videoRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    if (message === "upload/upload-images-post pedding") setLoading(true);
-  }, [message]);
+  // 🎵 Music API States (Apple iTunes)
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [isSearching, setIsSearching] = useState<boolean>(false);
+  const [selectedMusic, setSelectedMusic] = useState<{title: string, artist: string, url: string, cover: string} | null>(null);
+  const searchTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
-    if (upload.images[0] !== undefined && message === "upload/upload-images-post success") {
-      const urls = upload.images.map((image) => image.url);
-      setImages(urls);
-    }
-  }, [upload.images, message]);
+  const handleVideoClick = () => videoRef.current?.click();
 
-  const uploadImages = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const fileList: FileList = e.target.files!;
-    const filesArray: File[] = Array.from(fileList);
-    dispatch(uploadImgPost(filesArray)).then((response) => {
-      if (response.payload) setLoading(false);
-    });
-  };
-
-  const handleMusicUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // 🔥 1. Video Upload to Server (Cloudinary)
+  // 🔥 1. Video Upload to Server (Cloudinary)
+  const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setMusic(e.target.files[0]);
+      const file = e.target.files[0];
+      setLocalVideoPreview(URL.createObjectURL(file)); // Fast local preview
+      setIsOriginalMuted(false); 
+
+      setLoading(true);
+      console.log("1️⃣ Dispatch shuru hua. File data:", file); // 👈 Yeh tracker lagaya hai
+      
+      // Uploading to backend just like CreatePost
+      dispatch(uploadImgPost([file])).then((response) => {
+        console.log("3️⃣ Redux se wapas aaya:", response); // 👈 Yeh tracker lagaya hai
+        if (response.payload && response.payload[0]) {
+          setVideoUrl(response.payload[0].url); // Save uploaded URL
+        }
+        setLoading(false);
+      }).catch((error) => {
+        console.log("❌ Redux Thunk mein error:", error); // 👈 Yeh tracker lagaya hai
+        setLoading(false);
+      });
+    }
+  };
+  
+
+  // 🔥 2. Apple iTunes API Music Search
+  const fetchMusicFromAPI = async (query: string) => {
+    setIsSearching(true);
+    try {
+      const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=song&limit=10`);
+      const data = await res.json();
+      const formattedSongs = data.results
+        .filter((song: any) => song.previewUrl)
+        .map((song: any) => ({
+          id: song.trackId,
+          title: song.trackName,
+          artist: song.artistName,
+          url: song.previewUrl,
+          cover: song.artworkUrl100 
+        }));
+      setSearchResults(formattedSongs);
+    } catch (error) {
+      console.error("Music API error: ", error);
+    } finally {
+      setIsSearching(false);
     }
   };
 
+  const handleSearchMusic = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+    if (searchTimeout.current) clearTimeout(searchTimeout.current);
+
+    if (query.trim().length < 2) {
+      setSearchResults([]);
+      return;
+    }
+    searchTimeout.current = setTimeout(() => {
+      fetchMusicFromAPI(query);
+    }, 500);
+  };
+
+  const handleSelectMusic = (song: any) => {
+    setSelectedMusic(song);
+    setSearchQuery("");
+    setSearchResults([]);
+    setIsOriginalMuted(true); 
+  };
+
+  // 🔥 3. Save Reel to Database (MongoDB)
   const formik = useFormik({
     initialValues: { content: "" },
     validationSchema: schema,
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
+      if (!videoUrl) return alert("Please wait for the video to finish uploading!");
+
       const rawMentions = values.content.match(/@([a-zA-Z0-9_.]+)/g) || [];
       const mentions = rawMentions.map(m => m.substring(1)); 
+      
+      // Formatting music to store in DB
+      const musicData = selectedMusic ? JSON.stringify({
+        name: selectedMusic.title,
+        artist: selectedMusic.artist,
+        url: selectedMusic.url
+      }) : null;
 
-      dispatch(createPost({ ...values, images, music, mentions })).then((response) => {
+      // Create Post API Call
+      // Create Post API Call
+      dispatch(createPost({ 
+        content: values.content, 
+        images: [videoUrl], // Assuming your DB saves video URLs in the images array
+        music: musicData as any, 
+        mentions, // 👈 FIX 1: Yahan comma (,) lagana zaroori hai!
+        isReel: true 
+      } as any)).then((response) => { // 👈 FIX 2: '} as any)' likhne se TypeScript error nahi dega
         const newPost = response.payload;
         if(newPost) {
-          dispatch(setCreatePost(newPost._id));
+          // Notification & Socket logic
           dispatch(
             createNotification({
               id: newPost._id,
               recipients: [...newPost.user.followers],
               images: newPost.images[0] || "", 
               url: `/${newPost.user.username}/${newPost._id}`,
-              content: `posted: "${newPost.content.slice(0, 20)}..."`,
+              content: `posted a new Reel 🎬`,
               user: newPost.user._id,
             })
-          ).then((response) => {
-            socket.data!.emit("createNotify", response.payload);
+          ).then((res) => {
+            socket.data!.emit("createNotify", res.payload);
           });
         }
       });
 
-      if (stream) handleStopStream();
-      dispatch(setIsUploadGlobalState());
+      alert("🎬 Reel Uploaded Successfully! Check your profile.");
       formik.resetForm();
-      setImages([]);
-      setMusic(null); 
+      setVideoUrl(null);
+      setLocalVideoPreview(null);
+      setSelectedMusic(null);
     },
   });
 
-  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const value = e.target.value;
-    formik.handleChange("content")(e);
-
-    const cursorPosition = e.target.selectionStart;
-    const textBeforeCursor = value.substring(0, cursorPosition);
-    const match = textBeforeCursor.match(/(?:\s|^)@([a-zA-Z0-9_.]*)$/);
-
-    if (match) {
-      setShowMentionDropdown(true);
-      setMentionQuery(match[1].toLowerCase());
-    } else {
-      setShowMentionDropdown(false);
-    }
+  const handleDeleteVideo = () => {
+    setVideoUrl(null);
+    setLocalVideoPreview(null);
+    setIsOriginalMuted(false);
   };
 
-  const handleMentionSelect = (username: string) => {
-    const content = formik.values.content;
-    const cursorPosition = textAreaRef.current?.selectionStart || 0;
-    const textBeforeCursor = content.substring(0, cursorPosition);
-    const textAfterCursor = content.substring(cursorPosition);
-    
-    const match = textBeforeCursor.match(/(?:\s|^)@([a-zA-Z0-9_.]*)$/);
-    if (match) {
-       const replaceLength = match[0].length;
-       const newTextBefore = textBeforeCursor.substring(0, textBeforeCursor.length - replaceLength) + ` @${username} `;
-       formik.setFieldValue("content", newTextBefore + textAfterCursor);
-    }
-    
-    setShowMentionDropdown(false);
-    textAreaRef.current?.focus(); 
+  const handleDeleteMusic = () => {
+    setSelectedMusic(null);
+    setIsOriginalMuted(false); 
   };
 
-  const handleEmojiClick = (emojiData: EmojiClickData) => {
-    formik.setFieldValue("content", formik.values.content + emojiData.emoji);
+  const toggleOriginalAudio = () => {
+    setIsOriginalMuted(!isOriginalMuted);
   };
 
-  const handleStream = () => {
-    setStream(true);
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-      navigator.mediaDevices.getUserMedia({ video: true }).then((mediaStream) => {
-          videoRef.current!.srcObject = mediaStream;
-          videoRef.current!.play();
-          const track = mediaStream.getTracks();
-          setTracks(track[0]);
-        }).catch((err) => console.log(err));
-    }
-  };
-
-  const handleCapture = () => {
-    const width = videoRef.current!.clientWidth;
-    const height = videoRef.current!.clientHeight;
-    refCanvas.current!.setAttribute("width", String(width));
-    refCanvas.current!.setAttribute("height", String(height));
-    const ctx = refCanvas.current!.getContext("2d");
-    if (videoRef.current) {
-      ctx!.drawImage(videoRef.current, 0, 0, width, height);
-      let URL = refCanvas.current!.toDataURL();
-      setImages([...images, URL].map((item) => typeof item === "string" ? item : JSON.stringify(item)));
-    }
-  };
-
-  const handleStopStream = () => {
-    tracks!.stop();
-    setStream(false);
-  };
-
-  const handleDeleteImages = (index: number) => {
-    if (upload.images.length > 0) dispatch(deleteImgPost(upload.images[index].public_id));
-    const newArr = [...images];
-    newArr.splice(index, 1);
-    setImages(newArr);
-    if(newArr.length === 0) setMusic(null);
-  };
-
-  const handleCloseModal = () => {
-    dispatch(setIsUploadGlobalState());
-    if (stream) handleStopStream();
-    formik.resetForm();
-    setImages([]);
-    setMusic(null);
-  };
-
-  const canSubmit = images.length > 0 || formik.values.content.trim().length > 0;
-  const filteredUsers = mentionUsers.filter(u => u?.username?.toLowerCase().includes(mentionQuery));
+  const isShareDisabled = !videoUrl || loading; // Button tabhi chalega jab video upload ho jaye
 
   return (
-    <>
-      {isUploadGlobalState && (
-        <div className="edit_profile">
-          <button title="close" className="btn_close" onClick={handleCloseModal}>
-            <AiOutlineClose style={{ width: "1.5rem", height: "1.5rem", fill: "white" }} />
-          </button>
-          <form onSubmit={formik.handleSubmit} className="flex-column" style={{ maxWidth: "60%", maxHeight: "80%", height: "100%", width: "100%", backgroundColor: "white", paddingTop: "1rem", borderRadius: "5px", margin: "6rem auto" }}>
-            <div className="absolute-center" style={{ padding: "0 1rem 0.5rem  1rem", borderBottom: "1px solid #dbdbdb" }}>
-              <span className="absolute-center w-100" style={{ fontWeight: "600", lineHeight: "1.5px" }}>Create new post</span>
-              <button type="submit" className={canSubmit ? "post-btn" : "post-btn-disabled"} disabled={!canSubmit}>Share</button>
-            </div>
-            <div className="d-flex w-100 h-100">
-              <div style={{ width: "66%" }}>
-                {images.length > 0 && stream === false ? (
-                  <div className="h-100 position-relative d-flex flex-column">
-                    <Swiper navigation={true} modules={[Navigation]} className="mySwiper absolute-center flex-grow-1" style={{ borderRight: "1px solid #dbdbdb" }}>
-                      {images.map((image, index) => (
-                        <SwiperSlide key={index} className="stream">
-                          <span><button type="button" className="btn-close bg-white" aria-label="Close" onClick={() => handleDeleteImages(index)}></button></span>
-                          <img src={image} alt="upload" />
-                        </SwiperSlide>
-                      ))}
-                    </Swiper>
-                  </div>
-                ) : (
-                  <div className="flex-column change-avatar-btn absolute-center w-100 h-100" style={{ borderRight: "1px solid #dbdbdb" }}>
-                    <UploadImg />
-                    {stream && (
-                      <div className="stream position-relative">
-                        <span><button type="button" className="btn-close bg-white" aria-label="Close" onClick={handleStopStream}></button></span>
-                        <video autoPlay muted ref={videoRef} width="100%" height="100%" />
-                        <canvas ref={refCanvas} style={{ display: "none" }} />
-                      </div>
-                    )}
-                    <div className="input_images">
-                      <div style={{ position: "relative" }}>
-                        <span className="number-img-stream">{images.length}</span>
-                        <AiOutlineCamera className="mt-3 stream-btn" onClick={stream ? handleCapture : handleStream} />
-                      </div>
-                    </div>
-                    <p className="mt-3" style={{ color: "#8e8e8e" }}>Or</p>
-                    <p role="button" className="btn btn-primary mt-3 px-3" onClick={handleClick}>Select from computer</p>
-                    <input type="file" name="file" id="file_up" multiple accept="image/*" style={{ display: "none" }} ref={ref} onChange={uploadImages} />
-                    {loading ? <img src={Load} alt="loading" style={{ width: "1.2rem", height: "1.2rem" }} /> : null}
-                  </div>
-                )}
-              </div>
-              <div className="px-3 pt-3 flex-column" style={{ width: "34%", backgroundColor: "white", display: "flex", flexDirection: "column", position: "relative" }}>
-                <div className="d-flex mb-3">
-                  <div className="user-image-wrapper absolute-center icon" style={{ cursor: "pointer" }}>
-                    <img src={auth.user?.avatar} alt="user" />
-                  </div>
-                  <span className="ms-3 mt-2" style={{ fontSize: "0.9rem", fontWeight: "600", lineHeight: "1.2rem" }}>{auth.user?.username}</span>
-                </div>
-                {showMentionDropdown && filteredUsers.length > 0 && (
-                  <div className="mention-dropdown shadow" style={{ position: 'absolute', top: '60px', left: '10px', backgroundColor: '#fff', border: '1px solid #dbdbdb', borderRadius: '8px', zIndex: 9999, width: '90%', maxHeight: '200px', overflowY: 'auto' }}>
-                    {filteredUsers.map((u, idx) => (
-                      <div key={idx} onClick={() => handleMentionSelect(u.username)} style={{ padding: '10px 15px', cursor: 'pointer', borderBottom: '1px solid #efefef', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <img src={u.avatar || "https://cdn-icons-png.flaticon.com/512/149/149071.png"} alt="dp" style={{width: '25px', height: '25px', borderRadius: '50%'}} />
-                        <strong style={{fontSize: '14px'}}>@{u.username}</strong>
-                      </div>
-                    ))}
-                  </div>
-                )}
-                <textarea ref={textAreaRef} maxLength={2200} className="w-100 flex-grow-1" name="content" style={{ resize: "none", border: "none", outline: "none", minHeight: "150px" }} placeholder="Write a caption... Type @ to mention" value={formik.values.content} onChange={handleContentChange} />
-                <div className="border-top pt-2 mt-auto" style={{ position: "relative" }}>
-                  <span style={{ cursor: "pointer" }} onClick={() => setEmoji(!emoji)}><EmojiIcon className="mb-2" /></span>
-                  {emoji && <div style={{ position: "absolute", bottom: "40px", right: "0", zIndex: 50 }}><EmojiPicker onEmojiClick={handleEmojiClick} /></div>}
-                  <span className="length-content float-end text-muted mt-1" style={{fontSize: '12px'}}>{formik.values.content.length}/2200</span>
-                </div>
-              </div>
-            </div>
-          </form>
+    <div style={{ width: "100%", height: "100vh", display: "flex", justifyContent: "center", alignItems: "center", backgroundColor: "#fafafa" }}>
+      <form onSubmit={formik.handleSubmit} className="flex-column shadow" style={{ maxWidth: "800px", height: "550px", width: "100%", backgroundColor: "white", borderRadius: "10px", overflow: "hidden" }}>
+        
+        {/* Header */}
+        <div className="d-flex justify-content-between align-items-center px-3 py-2" style={{ borderBottom: "1px solid #dbdbdb" }}>
+          <span style={{ fontWeight: "600", fontSize: "16px" }}>Create new Reel</span>
+          <div className="d-flex align-items-center">
+             {loading && <img src={Load} alt="loading" style={{ width: "1.2rem", height: "1.2rem", marginRight: "10px" }} />}
+             <button type="submit" className={!isShareDisabled ? "btn text-primary fw-bold" : "btn text-muted fw-bold"} disabled={isShareDisabled}>
+               Share
+             </button>
+          </div>
         </div>
-      )}
-    </>
+
+        {/* Main Content */}
+        <div className="d-flex w-100 h-100">
+          
+          {/* Left Side: Video Preview */}
+          <div className="d-flex justify-content-center align-items-center" style={{ width: "55%", borderRight: "1px solid #dbdbdb", backgroundColor: "#262626", position: "relative" }}>
+            {localVideoPreview ? (
+              <>
+                <video 
+                  src={localVideoPreview} 
+                  controls={false} 
+                  autoPlay 
+                  loop 
+                  muted={isOriginalMuted} 
+                  style={{ width: "100%", height: "100%", objectFit: "contain", opacity: loading ? 0.5 : 1 }} 
+                />
+                
+                <button type="button" className="btn btn-danger btn-sm shadow" style={{ position: "absolute", top: "15px", left: "15px", borderRadius: "8px" }} onClick={handleDeleteVideo}>
+                  &times; Remove
+                </button>
+
+                <button 
+                  type="button" 
+                  className="btn btn-sm shadow" 
+                  style={{ 
+                    position: "absolute", 
+                    bottom: "20px", 
+                    right: "20px", 
+                    backgroundColor: "rgba(0,0,0,0.6)", 
+                    color: "white", 
+                    borderRadius: "20px",
+                    fontWeight: "600"
+                  }} 
+                  onClick={toggleOriginalAudio}
+                >
+                  {isOriginalMuted ? "🔇 Audio Off" : "🔊 Audio On"}
+                </button>
+              </>
+            ) : (
+              <div className="text-center text-white">
+                <UploadImg />
+                <h5 className="mt-3">Drag video here</h5>
+                <p className="text-muted text-sm">or</p>
+                <button type="button" className="btn btn-primary" onClick={handleVideoClick}>Select from computer</button>
+                <input type="file" accept="video/mp4,video/x-m4v,video/*" style={{ display: "none" }} ref={videoRef} onChange={handleVideoUpload} />
+              </div>
+            )}
+          </div>
+
+          {/* Right Side: Caption & Music API */}
+          <div className="p-3" style={{ width: "45%", display: "flex", flexDirection: "column" }}>
+            
+            <div className="d-flex align-items-center mb-2">
+              <span style={{ fontWeight: "600" }}>Write a caption</span>
+            </div>
+            <textarea
+              maxLength={2200}
+              className="w-100"
+              name="content"
+              style={{ resize: "none", border: "none", outline: "none", fontSize: "14px", height: "100px" }}
+              placeholder="Write a caption for your reel..."
+              value={formik.values.content}
+              onChange={formik.handleChange("content")}
+            />
+            <div className="border-bottom pb-2 text-end text-muted" style={{ fontSize: "12px" }}>
+              {formik.values.content.length}/2200
+            </div>
+
+            {/* MUSIC API SEARCH SECTION */}
+            <div className="mt-3 flex-grow-1" style={{ position: "relative" }}>
+              <span style={{ fontWeight: "600", display: "block", marginBottom: "8px" }}>Search Music 🎵</span>
+              
+              {!selectedMusic ? (
+                <>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Search songs, artists (e.g. Arijit)..."
+                    value={searchQuery}
+                    onChange={handleSearchMusic}
+                    style={{ fontSize: "14px", borderRadius: "8px" }}
+                  />
+                  
+                  {searchQuery.length > 1 && (
+                    <div className="shadow mt-1" style={{ position: "absolute", width: "100%", backgroundColor: "white", zIndex: 10, border: "1px solid #efefef", borderRadius: "8px", maxHeight: "250px", overflowY: "auto" }}>
+                      {isSearching ? (
+                        <div className="p-3 text-center text-muted" style={{ fontSize: "13px" }}>Searching Apple Music... 🔍</div>
+                      ) : searchResults.length > 0 ? (
+                        searchResults.map((song) => (
+                          <div 
+                            key={song.id} 
+                            onClick={() => handleSelectMusic(song)}
+                            className="p-2 border-bottom d-flex align-items-center"
+                            style={{ cursor: "pointer", transition: "0.2s" }}
+                            onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#f8f9fa"}
+                            onMouseOut={(e) => e.currentTarget.style.backgroundColor = "transparent"}
+                          >
+                            <img src={song.cover} alt="cover" style={{ width: "40px", height: "40px", borderRadius: "5px", marginRight: "10px" }} />
+                            <div>
+                              <div style={{ fontWeight: "600", fontSize: "13px", color: "#262626" }}>{song.title}</div>
+                              <div className="text-muted" style={{ fontSize: "11px" }}>{song.artist}</div>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="p-3 text-center text-muted">No results found</div>
+                      )}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="d-flex justify-content-between align-items-center p-2 border rounded" style={{ backgroundColor: "#f8f9fa" }}>
+                    <div className="d-flex align-items-center">
+                        <img src={selectedMusic.cover} alt="cover" style={{ width: "40px", height: "40px", borderRadius: "5px", marginRight: "10px" }} />
+                        <div>
+                            <div style={{ fontWeight: "600", fontSize: "13px", color: "#262626" }}>{selectedMusic.title}</div>
+                            <div className="text-muted" style={{ fontSize: "11px" }}>{selectedMusic.artist}</div>
+                        </div>
+                    </div>
+                    <button type="button" className="btn btn-sm btn-outline-danger" onClick={handleDeleteMusic}>
+                        &times;
+                    </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
   );
 };
 
-export default CreatePost;
+export default CreateReel;

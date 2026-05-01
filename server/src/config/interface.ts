@@ -27,7 +27,7 @@ export interface IUser extends Document {
   isPasswordMatched: (enteredPassword: string) => Promise<boolean>;
   createPasswordResetToken: () => Promise<string>;
   
-  // 🔴 NAYE FEATURES KI TYPESCRIPT ENTRY YAHAN HAI:
+  //  NAYE FEATURES KI TYPESCRIPT ENTRY YAHAN HAI:
   isPrivate?: boolean;
   blockedUsers?: Array<any>;
   followRequests?: Array<any>;

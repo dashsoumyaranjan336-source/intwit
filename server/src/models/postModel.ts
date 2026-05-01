@@ -5,22 +5,24 @@ const postSchema = new mongoose.Schema(
   {
     content: {
       type: String,
-      // 🔥 FIX: required: true hata diya taaki sirf pic bhi post ho sake
+      //  required: true hata diya taaki sirf pic bhi post ho sake
       trim: true,
       maxlength: 2200,
       default: "",
     },
     images: {
       type: Array,
-      // 🔥 FIX: required: true hata diya taaki sirf text bhi post ho sake
+      //  required: true hata diya taaki sirf text bhi post ho sake
       default: [],
     },
+    //  YAHAN THIK KIYA HAI (Music Object ban gaya) 
     music: {
-      type: String, // 🔥 NAYA: Music URL save karne ke liye
-      default: "",
+      name: { type: String, default: "" },
+      url: { type: String, default: "" }
     },
+    //  YAHAN TAK 
     mentions: {
-      type: Array,  // 🔥 NAYA: Tagged users save karne ke liye
+      type: Array,  // Tagged users save karne ke liye
       default: [],
     },
     likes: [{ type: mongoose.Types.ObjectId, ref: "user" }],

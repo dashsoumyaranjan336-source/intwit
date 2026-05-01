@@ -24,45 +24,68 @@ class APIfeatures {
   }
 }
 
-// 🔥 UPDATED: createPost function
+// 1. UPDATED: createPost function (Mentions Regex Added)
 const createPost = asyncHandler(
   async (req: IReqAuth, res: Response): Promise<void> => {
     try {
-      // 🔥 NAYA: music aur mentions ko req.body se nikalna
-      const { content, images, music, mentions } = req.body;
+      let { content, images, music } = req.body;
 
-      // 🔥 NAYI VALIDATION: Ya toh content ho, ya images ho. Dono khali nahi hone chahiye.
+      //  Agar frontend ne gaane ko text (String) banakar bheja hai, toh use wapas Object banao
+      if (music && typeof music === "string") {
+        try {
+          music = JSON.parse(music);
+        } catch (e) {
+          console.log("Music parsing mein choti si dikkat aayi.");
+        }
+      }
+
       if ((!content || content.trim() === "") && (!images || images.length === 0)) {
         res.status(400).json({ msg: "Please add text or a photo to create a post." });
         return;
       }
 
+      //  Caption me se @usernames dhoondho aur unki real IDs nikalo
+      let mentionIds: any[] = [];
+      if (content) {
+        // Regex jo @ ke baad wale naam nikalega
+        const usernames = content.match(/@([a-zA-Z0-9_.]+)/g)?.map((m: string) => m.substring(1)) || [];
+        
+        if (usernames.length > 0) {
+          // Database mein un users ko dhoondho
+          const users = await User.find({ username: { $in: usernames } });
+          mentionIds = users.map(u => u._id); // Unki asli ID mentions array mein jayegi
+        }
+      }
+
       const newPost = new Post({
         content: content || "",
         images: images || [],
-        music: music || "",       // 🔥 Music add kiya
-        mentions: mentions || [], // 🔥 Mentions add kiye
+        music: music || { name: "", url: "" }, // 🔥 Ekdum safe Object
+        mentions: mentionIds, //  Yahan proper User IDs save hongi
         user: req.user?._id,
       });
 
+      //  STEP 1: PEHLE POST SAVE HOGI (Taaki error aaye toh counter bilkul na badhe)
+      await newPost.save();
+
+      //  STEP 2: POST SAVE HONE KE BAAD HI COUNTER BADHEGA
       await User.findOneAndUpdate(
         { _id: req.user?._id },
-        {
-          $push: { post: newPost._id },
-        },
+        { $push: { post: newPost._id } },
         { new: true }
       );
 
-      await (
-        await newPost.populate("user", "avatar username fullname followers")
-      ).save();
-
+      await newPost.populate("user", "avatar username fullname followers");
+      
       res.json(newPost);
     } catch (err: any) {
-      throw new Error(err);
+      // 🚨 JASOOS: Agar koi bhi error aayi, toh ab wo is terminal mein pakka print hogi!
+      console.log("🚨 CREATE POST ERROR:", err.message);
+      res.status(500).json({ msg: err.message });
     }
   }
 );
+ 
 
 // 🔍 1. GET HOME POSTS (Mutual Block Filter Added)
 const getPosts = asyncHandler(
@@ -78,7 +101,7 @@ const getPosts = asyncHandler(
         .populate("user", "avatar username fullname followers blockedUsers")
         .sort("-createdAt");
 
-      // 🚫 JADU: Filter posts based on Mutual Block
+      // Filter posts based on Mutual Block
       const filteredPosts = posts.filter(post => {
         const postUser = post.user as any;
         const iBlockedHim = blockedUsers.includes(postUser._id.toString());
@@ -94,6 +117,7 @@ const getPosts = asyncHandler(
   }
 );
 
+//  2. getUserPosts function
 const getUserPosts = asyncHandler(
   async (req: IReqAuth, res: Response): Promise<void> => {
     try {
@@ -105,8 +129,12 @@ const getUserPosts = asyncHandler(
 
       // Check block status before showing profile posts
       const currentUser = await User.findById(req.user!._id);
-      // 🔴 Safe logic
-      if (currentUser?.blockedUsers?.includes(user._id as any) || user.blockedUsers?.includes(req.user!._id as any)) {
+      
+      //  SAFE LOGIC: MongoDB ObjectIds ko string (.toString) mein convert karna zaroori hai!
+      const iBlockedHim = currentUser?.blockedUsers?.some(id => id.toString() === user._id.toString());
+      const heBlockedMe = user.blockedUsers?.some(id => id.toString() === req.user!._id.toString());
+
+      if (iBlockedHim || heBlockedMe) {
           res.json([]); 
           return;
       }
@@ -119,7 +147,7 @@ const getUserPosts = asyncHandler(
 
       res.json(posts);
     } catch (err: any) {
-      throw new Error(err);
+      res.status(500).json({ msg: err.message });
     }
   }
 );
@@ -217,15 +245,27 @@ const unLikePost = asyncHandler(
   }
 );
 
+//  updatePost function (Mentions Regex Added)
 const updatePost = asyncHandler(
   async (req: IReqAuth, res: Response): Promise<void> => {
     try {
       const { id, content } = req.body;
 
+      // 🔥 JASOOS LOGIC FOR EDIT: (Edit ke time pe bhi mentions check honge)
+      let mentionIds: any[] = [];
+      if (content) {
+        const usernames = content.match(/@([a-zA-Z0-9_.]+)/g)?.map((m: string) => m.substring(1)) || [];
+        if (usernames.length > 0) {
+          const users = await User.find({ username: { $in: usernames } });
+          mentionIds = users.map(u => u._id);
+        }
+      }
+
       const post = await Post.findOneAndUpdate(
         { _id: id, user: req.user!._id }, 
         {
           content,
+          mentions: mentionIds // ✅ Updated mentions yahan database me save jayenge
         },
         { new: true }
       ).populate("user", "avatar username fullname followers");
@@ -244,21 +284,25 @@ const deletePost = asyncHandler(
         _id: req.params.id,
         user: req.user!._id,
       });
+
       if (post) {
         await User.findOneAndUpdate(
           { _id: req.user?._id },
           {
-            $pull: { post: post._id },
+            $pull: { post: post._id }, 
           },
           { new: true }
         );
+
         await Comment.deleteMany({ _id: { $in: post.comments } });
-        res.json(post);
+        
+        // 🔥 YAHAN THI GALTI: Wapas original res.json(post) kar diya!
+        res.json(post); 
       } else {
-        res.status(400).json({ msg: "Post not found or unauthorized." });
+        res.status(400).json({ msg: "Post not found or already deleted." });
       }
     } catch (err: any) {
-      throw new Error(err);
+      res.status(500).json({ msg: err.message });
     }
   }
 );

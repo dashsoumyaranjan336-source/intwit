@@ -12,7 +12,6 @@ import googlePlay from "../images/google-play.png";
 import Helmet from "../components/Helmet";
 import FaceBookLogin from "../components/FaceBookLogin";
 
-// CSS file import kar lena
 import "../styles/Login.css";
 
 let schema = yup.object().shape({
@@ -39,7 +38,6 @@ const Login: React.FC = () => {
   });
 
   const [typePass, setTypePass] = useState<boolean>(false);
-  const [isActive, setIsActive] = useState<boolean>(false);
 
   const { auth } = useSelector((state: RootState) => state);
   const { user, message } = auth;
@@ -47,26 +45,14 @@ const Login: React.FC = () => {
   useEffect(() => {
     if (user) {
       navigate("/");
-    } else {
-      navigate("");
     }
   }, [user, navigate]);
 
-  useEffect(() => {
-    if (
-      formik.values.password.length >= 6 &&
-      formik.values.email.length >= 1 &&
-      !formik.errors.email
-    ) {
-      setIsActive(true);
-    } else {
-      setIsActive(false);
-    }
-  }, [
-    formik.values.password.length,
-    formik.values.email.length,
-    formik.errors.email,
-  ]);
+  //  useEffect hata diya! Ab state turant update hogi bina delay ke
+  const isFormValid = 
+    formik.values.email.length >= 1 && 
+    formik.values.password.length >= 6 && 
+    !formik.errors.email;
 
   return (
     <Helmet title="Login • intwit">
@@ -92,7 +78,11 @@ const Login: React.FC = () => {
                 </div>
               ) : null}
 
-              <div className="pass">
+              {/*  Wapas div use kiya, aur input ka padding adjust kiya */}
+              <div 
+                className="pass" 
+                style={{ position: "relative", display: "flex", alignItems: "center" }}
+              >
                 <input
                   className="input-password"
                   type={typePass ? "text" : "password"}
@@ -100,20 +90,40 @@ const Login: React.FC = () => {
                   onChange={formik.handleChange("password")}
                   value={formik.values.password}
                   name="password"
+                  style={{ 
+                    width: "100%", 
+                    height: "100%",
+                    border: "none", 
+                    outline: "none", 
+                    background: "transparent",
+                    paddingRight: "50px" // Show button ke liye jagah chhodi
+                  }}
                 />
-                <h6 onClick={() => setTypePass(!typePass)}>
+                <span 
+                  style={{ 
+                    cursor: "pointer", 
+                    position: "absolute",
+                    right: "12px",
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    userSelect: "none",
+                    zIndex: 10
+                  }}
+                  // 🔥 FIX 3: onClick ki jagah onMouseDown use kiya (Pehle click par 100% chalega)
+                  onMouseDown={(e) => {
+                    e.preventDefault(); 
+                    setTypePass(!typePass);
+                  }}
+                >
                   {typePass ? "Hide" : "Show"}
-                </h6>
+                </span>
               </div>
 
+              {/*   Button direct isFormValid variable se control hoga */}
               <button
                 type="submit"
-                className={
-                  isActive ? "form-btn active-btn" : "form-btn pe-none"
-                }
-                disabled={
-                  formik.values.email && formik.values.password ? false : true
-                }
+                className={`form-btn ${isFormValid ? "active-btn" : "pe-none"}`}
+                disabled={!isFormValid}
               >
                 <span>Log in</span>
               </button>

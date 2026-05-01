@@ -16,7 +16,7 @@
   margin-right: 6rem;
   overflow: hidden;
   border-radius: 50%;
-  border: 1px solid var(--border-color); /* 🔴 UPDATE: #ddd hata diya */
+  border: 1px solid var(--border-color); 
   cursor: pointer;
 }
 .profile-image-wrapper img {
@@ -25,19 +25,19 @@
 }
 .change-avatar-btn {
   height: 1rem;
-  background-color: transparent; /* 🔴 UPDATE: white hata diya */
+  background-color: transparent; 
   color: #0095f6;
   font-size: 0.875rem;
   font-weight: bold;
   border: none;
 }
 .change-avatar-btn:hover {
-  color: var(--text-color); /* 🔴 UPDATE: black hata diya */
+  color: var(--text-color); 
 }
 .follow-btn {
   height: 2rem;
   width: 5rem;
-  background-color: #0095f6; /* 🔴 UPDATE: Insta blue */
+  background-color: #0095f6; /*  Insta blue */
   font-size: 0.9rem;
   font-weight: bold;
   color: #fff;
@@ -51,59 +51,59 @@
 .unfollow-btn {
   height: 2rem;
   width: 5rem;
-  background-color: var(--card-bg); /* 🔴 UPDATE: #ececec hata diya */
+  background-color: var(--card-bg); 
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--text-color); /* 🔴 UPDATE: black hata diya */
-  border: 1px solid var(--border-color); /* 🔴 UPDATE: Insta jaisa look */
+  color: var(--text-color); 
+  border: 1px solid var(--border-color); /* Insta jaisa look */
   border-radius: 0.4rem;
   cursor: pointer;
 }
 .unfollow-btn:hover {
-  background-color: var(--bg-color); /* 🔴 UPDATE */
+  background-color: var(--bg-color); 
 }
 
 .edit-profile-btn {
   height: 2rem;
   width: 6.25rem;
-  background-color: var(--bg-color); /* 🔴 UPDATE: #efefef hata diya */
+  background-color: var(--bg-color); 
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--text-color); /* 🔴 UPDATE: black hata diya */
-  border: 1px solid var(--border-color); /* 🔴 UPDATE */
+  color: var(--text-color); 
+  border: 1px solid var(--border-color); 
   border-radius: 0.4rem;
   cursor: pointer;
 }
 .edit-profile-btn:hover {
-  background-color: var(--card-bg); /* 🔴 UPDATE */
+  background-color: var(--card-bg); 
 }
 
 .posts-followers-details-wrapper {
   margin: 20px 0;
 }
 .total-wrapper {
-  background-color: transparent; /* 🔴 UPDATE: white hata diya */
+  background-color: transparent; 
   margin-right: 40px;
 }
 
 .profile-btn-active {
   background: transparent;
-  color: var(--text-color); /* 🔴 UPDATE */
+  color: var(--text-color); 
   cursor: pointer;
 }
 .profile-btn-active:active {
-  color: var(--secondary-text); /* 🔴 UPDATE */
+  color: var(--secondary-text); 
 }
 
 .total-number {
   padding-right: 5px;
-  color: var(--text-color); /* 🔴 UPDATE */
+  color: var(--text-color); 
 }
 .font-w-500 {
   font-weight: 500;
 }
 .profile-fullname-wrapper {
-  color: var(--text-color); /* 🔴 UPDATE: #262626 hata diya */
+  color: var(--text-color); 
   font-size: 0.9rem;
   font-weight: 600;
   line-height: 1.1rem;
@@ -112,7 +112,7 @@
   text-decoration: underline;
 }
 .profile-website-wrapper {
-  color: #e0f1ff !important; /* 🔴 UPDATE: Dark mode me clear blue link */
+  color: #e0f1ff !important; 
   font-size: 0.9rem;
   font-weight: 600;
   line-height: 1rem;
@@ -133,12 +133,12 @@
 }
 .posts-list-title-active {
   padding-top: 0.8rem;
-  border-top: 1px solid var(--text-color); /* 🔴 UPDATE: black hata diya */
+  border-top: 1px solid var(--text-color); 
   cursor: pointer;
   margin-right: 4rem;
 }
 .post-list-title-span-active {
-  color: var(--text-color); /* 🔴 UPDATE: #262626 hata diya */
+  color: var(--text-color); 
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 1px;
@@ -148,7 +148,7 @@
   text-transform: uppercase;
 }
 .post-list-title-span {
-  color: var(--secondary-text); /* 🔴 UPDATE: #8e8e8e hata diya */
+  color: var(--secondary-text); 
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 1px;
@@ -195,7 +195,7 @@
   position: absolute;
   width: 100%;
   background: rgba(0, 0, 0, 0.4);
-  color: #fff; /* 🔴 UPDATE: Icon and text inside hover should be white */
+  color: #fff; /*  Icon and text inside hover should be white */
   font-weight: 700;
   border-radius: inherit;
 }
@@ -232,7 +232,7 @@
   position: absolute;
   top: 1rem;
   right: 1rem;
-  background-color: transparent; /* 🔴 UPDATE: #777 hata diya */
+  background-color: transparent; 
   color: white;
   font-size: 1.5rem;
   cursor: pointer;
@@ -242,7 +242,7 @@
   height: 4rem;
   overflow: hidden;
   border-radius: 50%;
-  border: 1px solid var(--border-color); /* 🔴 UPDATE: #ddd hata diya */
+  border: 1px solid var(--border-color); 
   cursor: pointer;
 }
 .info_avatar img {

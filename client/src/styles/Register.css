@@ -20,7 +20,7 @@
   padding: 20px;
 }
 
-/* 👇 Compact Form Box 👇 */
+/*  Compact Form Box  */
 .form-data-register {
   background: #ffffff;
   padding: 35px 40px;
@@ -28,7 +28,7 @@
   border-radius: 20px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); /* Soft shadow */
   width: 100%;
-  max-width: 380px; /* Width thoda sa fix kiya taaki inputs sahi se aayein */
+  max-width: 380px; 
   display: flex;
   flex-direction: column;
 }
@@ -58,7 +58,7 @@
 .form-data-register form {
   display: flex;
   flex-direction: column;
-  gap: 10px; /* Gap kam kiya taaki form lamba na lage */
+  gap: 10px; 
 }
 
 .form-data-register input {

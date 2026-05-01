@@ -11,7 +11,7 @@ import {
   unSavePost,
   togglePrivacy, 
   blockUser,     
-  getBlockedUsers // ✅ Imported correctly
+  getBlockedUsers //  Imported correctly
 } from "../controllers/userCtrl";
 
 const router: Router = Router();

@@ -21,7 +21,7 @@
   padding: 20px;
 }
 
-/* 👇 Left Side Image Area 👇 */
+/*  Left Side Image Area  */
 .phone-app-demo {
   display: none; 
 }
@@ -39,7 +39,7 @@
   }
 }
 
-/* 👇 Modern Compact Form 👇 */
+/*  Modern Compact Form  */
 .form-data-login {
   background: #ffffff;
   padding: 35px 40px; /* Form ko andar se compact kiya */
@@ -52,7 +52,7 @@
   flex-direction: column;
 }
 
-/* 👇 INTWIT Logo - Fix 👇 */
+/*  INTWIT Logo - Fix  */
 .logo {
   display: flex;
   justify-content: center;

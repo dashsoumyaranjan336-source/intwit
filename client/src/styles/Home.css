@@ -21,7 +21,7 @@
   cursor: pointer;
 }
 .home-post-text {
-  color: var(--text-color); /* 🔴 UPDATE: #262626 hata diya */
+  color: var(--text-color); 
   font-size: 0.9rem;
   font-weight: 600;
   line-height: 1.1rem;

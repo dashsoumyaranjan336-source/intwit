@@ -37,26 +37,28 @@ const uploadImagesAvatar = asyncHandler(
 const uploadImagesPost = asyncHandler(
   async (req: Request, res: Response): Promise<void> => {
     try {
-      const uploader = (path: string) => cloudinaryUploadImgPost(path);
+      // Yahan resource_type: "auto" pass karna zaroori hai
+      const uploader = (path: string) => cloudinaryUploadImgPost(path); 
       const urls = [];
       const files = req.files as Express.Multer.File[];
 
+      console.log("Backend: Received files count:", files?.length);
+
       for (const file of files) {
         const { path } = file;
+        // Hum yahan path ke saath-saath backend terminal mein log bhi dekhenge
         const newpath = await uploader(path);
+        console.log("Backend: Cloudinary Result:", newpath);
         urls.push(newpath);
-        fs.unlinkSync(path);
+        if (fs.existsSync(path)) fs.unlinkSync(path);
       }
-      const images = urls.map((file) => {
-        return file;
-      });
-      res.json(images);
+      res.json(urls);
     } catch (error: any) {
-      throw new Error(error);
+      console.error("Backend Upload Error:", error);
+      res.status(500).json({ message: error.message });
     }
   }
 );
-
 const uploadImagesMessages = asyncHandler(
   async (req: Request, res: Response): Promise<void> => {
     try {

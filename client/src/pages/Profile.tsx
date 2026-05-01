@@ -192,7 +192,7 @@ const Profile: React.FC = () => {
                 )}
               </div>
 
-              {/* 🚨 Reels Tab */}
+              {/*  Reels Tab */}
               <div className="cur-point">
                 {isReels ? (
                   <div className="posts-list-title-active">
@@ -228,8 +228,8 @@ const Profile: React.FC = () => {
             {/* Tabs Content Switching */}
             {isPosts && <PostsProfile />}
             
-            {/* 🔥 Yahan changes kiye hain: userId pass kiya hai */}
-            {isReels && <ReelsProfile userId={isMyProfile ? auth.user?._id : user.data?._id} />}
+            {/*  Yahan changes kiye hain: userId hata diya hai kyunki ab Redux se data aa raha hai */}
+            {isReels && <ReelsProfile />}
             
             {isSaved && <SavedPostsProfile />}
           </div>

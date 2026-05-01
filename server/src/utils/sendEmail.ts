@@ -10,7 +10,7 @@ export const sendEmail = async (data: ISendEmail) => {
       secure: true, // true for 465, false for other ports
       auth: {
         user: process.env.MAIL_ID, 
-        pass: process.env.MAIL_PASSWORD, // ⚠️ YAHAN NORMAL GMAIL PASSWORD NAHI, APP PASSWORD LAGEGA!
+        pass: process.env.MAIL_PASSWORD, // YAHAN NORMAL GMAIL PASSWORD NAHI, APP PASSWORD LAGEGA!
       },
     });
 

@@ -25,7 +25,7 @@ const uploadToCloudinary = async (fileUpload: string, folderName: string) => {
       },
       (error, result: any) => {
         if (error) {
-          // ⚠️ Ye line terminal mein asli error dikhayegi (e.g., Invalid API Key)
+          //  Ye line terminal mein asli error dikhayegi (e.g., Invalid API Key)
           console.error(`❌ CLOUDINARY ${folderName.toUpperCase()} UPLOAD ERROR:`, error);
           reject(error);
         } else {

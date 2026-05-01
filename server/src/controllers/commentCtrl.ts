@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 import Comment from "../models/commentModel";
 import Post from "../models/postModel";
-import User from "../models/userModel"; // 🔴 User model import kiya check ke liye
+import User from "../models/userModel"; //  User model import kiya check ke liye
 
 import { IReqAuth } from "../config/interface";
 
@@ -69,7 +69,7 @@ const getComments = asyncHandler(
         postId: { $in: postIds },
       }).populate("user", "avatar username fullname followers following blockedUsers");
 
-      // 🚫 JADU: Filter comments based on Mutual Block
+      // 🚫 Filter comments based on Mutual Block
       const filteredComments = comments.filter(comment => {
         const commentUser = comment.user as any;
         const iBlockedHim = blockedUsers.includes(commentUser._id.toString());

@@ -9,8 +9,8 @@
   height: 100vh;
   z-index: 5;
   width: 400px;
-  background: var(--bg-color); /* 🔴 UPDATE: Dark mode sync ke liye */
-  color: var(--text-color);    /* 🔴 UPDATE: Text color jisse sab dikhe */
+  background: var(--bg-color); /*  Dark mode sync ke liye */
+  color: var(--text-color);    /*  Text color jisse sab dikhe */
   transform: translateX(-400px);
   transition: all 0.5s ease-in-out;
 }
@@ -24,7 +24,7 @@
   font-weight: 500;
   font-size: x-large;
   margin: 1.3rem;
-  color: var(--text-color); /* 🔴 UPDATE */
+  color: var(--text-color); 
 }
 
 .search-input {
@@ -38,8 +38,8 @@
   padding: 9px;
   overflow: hidden;
   text-overflow: ellipsis;
-  background: var(--card-bg); /* 🔴 UPDATE: Input ka color theek kiya */
-  color: var(--text-color);   /* 🔴 UPDATE: Type karte waqt text dikhega */
+  background: var(--card-bg); /*  Input ka color  */
+  color: var(--text-color);   
   border: 1px solid var(--border-color);
   outline: none;
   border-radius: 3px;
@@ -52,8 +52,8 @@
   top: 1.5rem;
   right: 0.5rem;
   width: 1rem;
-  background-color: transparent; /* 🔴 UPDATE: #fafafa hata diya */
-  color: var(--text-color);      /* 🔴 UPDATE: Cross button white dikhega dark mode me */
+  background-color: transparent; 
+  color: var(--text-color);      /* Cross button white dikhega dark mode me */
 }
 
 .loading-btn {
@@ -80,7 +80,7 @@
   align-items: center;
   padding-left: 1rem;
   margin: 1rem 0 0.5rem 0;
-  color: var(--text-color); /* 🔴 UPDATE: Username search hone ke baad dikhega */
+  color: var(--text-color); /*  Username search hone ke baad dikhega */
 }
 
 .userprofile-image-wrapper {
@@ -111,7 +111,7 @@
 }
 
 .search-userprofile-follow-wrapper:hover {
-  background: var(--card-bg); /* 🔴 UPDATE: Hover pe #f4f4f4 ki jagah dark shade aayega */
+  background: var(--card-bg); 
   cursor: pointer;
 }
 

@@ -146,13 +146,11 @@ const PostModal: React.FC = () => {
     
     try {
       if (navigator.share) {
-        // Mobile me WhatsApp, Insta ka popup khulega
         await navigator.share({
           title: `Check out ${filteredPost.user.username}'s post on Intwit`,
           url: postUrl
         });
       } else {
-        // PC me safely copy hoga bina error ke
         const textArea = document.createElement("textarea");
         textArea.value = postUrl;
         document.body.appendChild(textArea);
@@ -228,6 +226,18 @@ const PostModal: React.FC = () => {
     });
   };
 
+  // 🔥 MAGIC FIX: Modal ke liye bhi Music ka Dabba yahan khulega!
+  let parsedMusic: any = null;
+  if (filteredPost && (filteredPost as any).music) {
+    try {
+      parsedMusic = typeof (filteredPost as any).music === "string" 
+        ? JSON.parse((filteredPost as any).music) 
+        : (filteredPost as any).music;
+    } catch (error) {
+      console.log("Modal mein Music dabba kholne mein dikkat:", error);
+    }
+  }
+
   return (
     <div>
       {isPostGlobalState && filteredPost && (
@@ -259,7 +269,18 @@ const PostModal: React.FC = () => {
                 >
                   {filteredPost!.images.map((image, index) => (
                     <SwiperSlide key={index}>
-                      <img src={image} alt={image} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                      {/* 🔥 FIXED: Modal ke andar Video vs Image ka check 🔥 */}
+                      {image.match(/\.(mp4|webm|ogg|mov)$/i) || image.includes("video/upload") ? (
+                        <video 
+                          src={image} 
+                          controls
+                          autoPlay
+                          loop
+                          style={{ width: '100%', height: '100%', objectFit: 'contain' }} 
+                        />
+                      ) : (
+                        <img src={image} alt={image} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                      )}
                     </SwiperSlide>
                   ))}
                 </Swiper>
@@ -312,7 +333,7 @@ const PostModal: React.FC = () => {
                   <Link to={`/${filteredPost!.user.username}`} onClick={handleCloseModal}>
                     <img className="user-image-wrapper home-post-avatar" src={filteredPost!.user.avatar} alt="avatar" />
                   </Link>
-                  <div className="ms-3">
+                  <div className="ms-3 w-100">
                     <Link to={`/${filteredPost!.user.username}`} onClick={handleCloseModal} className="post-modal-username home-post-text">
                       {filteredPost!.user.username}
                     </Link>{" "}
@@ -321,6 +342,18 @@ const PostModal: React.FC = () => {
                     <span style={{ whiteSpace: 'pre-wrap' }}>
                       {formatMentions(filteredPost!.content)}
                     </span>
+
+                    {/* 🔥 MAGIC FIX: Ab player Modal mein bhi bajeyga! 🔥 */}
+                    {parsedMusic && parsedMusic.url && (
+                      <div className="mt-3 mb-2 pe-3 w-100">
+                        <audio controls src={parsedMusic.url} style={{ width: '100%', height: '35px', borderRadius: '20px' }} />
+                        {parsedMusic.name && (
+                          <div style={{ fontSize: '11px', color: 'gray', marginTop: '2px', fontWeight: 'bold' }}>
+                            🎵 {parsedMusic.name}
+                          </div>
+                        )}
+                      </div>
+                    )}
                     
                     <div className="time mt-1">{getTimesToWeekAgoString(filteredPost!.createdAt)}</div>
                   </div>

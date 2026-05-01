@@ -49,7 +49,7 @@ const Reels: React.FC = () => {
         if (token) {
             getReels();
         } else {
-            console.log("🔥 Token nahi mila, F12 check kar");
+            console.log(" Token nahi mila, F12 check kar");
         }
     }, [auth]);
 

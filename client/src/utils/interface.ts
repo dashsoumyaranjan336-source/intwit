@@ -125,8 +125,8 @@ export interface IPost {
   user: User;
   content: string;
   images: string[];
-  music?: string;       // 🔥 NAYA: Music URL ke liye
-  mentions?: string[];  // 🔥 NAYA: Mentions array ke liye
+  music?: string;       //  Music URL ke liye
+  mentions?: string[];  //  Mentions array ke liye
   likes: string[];
   comments: string[];
   _id: string;
@@ -136,8 +136,8 @@ export interface IPost {
 export interface ICreatePost {
   content: string;
   images: string[];
-  music?: any;          // 🔥 NAYA: Create karte waqt file ke liye
-  mentions?: string[];  // 🔥 NAYA: Tagged users ke liye
+  music?: any;          //  Create karte waqt file ke liye
+  mentions?: string[];  //  Tagged users ke liye
 }
 
 export interface postState {

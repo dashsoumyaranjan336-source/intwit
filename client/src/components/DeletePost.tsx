@@ -5,6 +5,8 @@ import { deletePost } from "../redux/features/postSlice";
 import { AppDispatch, RootState } from "../redux/store";
 import { deleteNotification } from "../redux/features/notificationSlice";
 import { deleteImgPost } from "../redux/features/uploadImgSlice";
+// 🔥 Naya Action Import kiya hua hai
+import { setDeletePost } from "../redux/features/authSlice";
 
 const DeletePost: React.FC = () => {
   const { globalState } = useSelector((state: RootState) => state);
@@ -15,12 +17,9 @@ const DeletePost: React.FC = () => {
   const { post } = useSelector((state: RootState) => state);
 
   const filteredPost = post.data.find((value) => value._id === postModalId);
-  // const startIndex = msg.media.lastIndexOf("/") + 1;
-  //       const endIndex = msg.media.lastIndexOf(".");
 
-  //       const publicId = msg.media.substring(startIndex, endIndex);
-  //       dispatch(deleteImgMessages(publicId));
   const handleDelete = () => {
+    // 1. Post delete karna aur Cloudinary se image hatana
     dispatch(deletePost(postModalId!)).then((response) => {
       response.payload.images.map((image: string) => {
         if (image.startsWith("https://res.cloudinary.com")) {
@@ -32,7 +31,14 @@ const DeletePost: React.FC = () => {
         }
       });
     });
+
+    // 🔥 THE MAGIC LINE: Profile counter ko turant -1 karo!
+    dispatch(setDeletePost(postModalId!));
+
+    // 3. Modal band karna
     dispatch(setIsDeletePostGlobalState());
+
+    // 4. Notifications clear karna
     dispatch(deleteNotification(postModalId!)).then((response) => {
       socket.data!.emit("deleteNotify", response.payload);
     });
@@ -47,6 +53,7 @@ const DeletePost: React.FC = () => {
       });
     });
   };
+
   return (
     <>
       {isDeletePostGlobalState && (
@@ -56,7 +63,6 @@ const DeletePost: React.FC = () => {
               height: "12.5rem",
               width: "25rem",
               backgroundColor: "white",
-
               borderRadius: "5px",
             }}
           >

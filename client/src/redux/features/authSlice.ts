@@ -212,7 +212,7 @@ export const authSlice = createSlice({
   name: "auth",
   initialState: initialState,
   reducers: {
-    // 🔥 NAYA FIX: Turant Following ginti kam karne ke liye
+    // Turant Following ginti kam karne ke liye
     removeFollowingLocally: (state, action: PayloadAction<string>) => {
       if (state.user) {
         state.user.following = state.user.following.filter(
@@ -227,7 +227,7 @@ export const authSlice = createSlice({
         }
       }
     },
-    // 🔥 NAYA FIX: Turant Follower ginti kam karne ke liye
+    //   Turant Follower ginti kam karne ke liye
     removeFollowerLocally: (state, action: PayloadAction<string>) => {
       if (state.user) {
         state.user.followers = state.user.followers.filter(
