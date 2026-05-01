@@ -30,8 +30,8 @@ const userSchema = new mongoose.Schema(
     },
     avatar: {
       type: String,
-      default:
-        "https://res.cloudinary.com/tuananh-pham/image/upload/v1678058561/MERN-intwit-typescript/avatar/avatar-default_xkj2pq.jpg",
+      // FIX: Yahan apna khud ka default avatar link dalein
+      default: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
     },
     role: { type: String, default: "user" },
     gender: { type: String, default: "male" },
@@ -50,9 +50,12 @@ const userSchema = new mongoose.Schema(
     post: [{ type: mongoose.Types.ObjectId, ref: "post" }],
     saved: [{ type: mongoose.Types.ObjectId, ref: "post" }],
     
-    //  MAIN FIX 
     blockedUsers: [{ type: mongoose.Types.ObjectId, ref: "user" }],
     isPrivate: { type: Boolean, default: false },
+
+    // FIX: Password Reset ke liye ye fields hona zaroori hai
+    passwordResetToken: String,
+    passwordResetExpires: Date,
 
     token: {
       type: String,
@@ -63,21 +66,22 @@ const userSchema = new mongoose.Schema(
   }
 );
 
+// Password Hashing Middleware
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
-    next();
+    return next();
   }
-  const salt = await bcrypt.genSaltSync(10);
+  const salt = await bcrypt.genSalt(10); // Async version use kiya
   this.password = await bcrypt.hash(this.password, salt);
   next();
 });
 
-userSchema.methods.isPasswordMatched = async function (
-  enteredPassword: string
-) {
+// Method: Password match karne ke liye
+userSchema.methods.isPasswordMatched = async function (enteredPassword: string) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
+// Method: Reset Token banane ke liye
 userSchema.methods.createPasswordResetToken = async function () {
   const resetToken = crypto.randomBytes(32).toString("hex");
   this.passwordResetToken = crypto
