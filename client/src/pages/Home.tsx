@@ -2,31 +2,23 @@ import React from "react";
 import Helmet from "../components/Helmet";
 import PostList from "../components/home/PostList";
 import SuggestionUser from "../components/home/SuggestionUser";
-import StoriesBar from "../components/Story"; // 🚨 NAYA: StoriesBar import kiya
+import StoriesBar from "../components/Story"; 
+import "./Home.css"; // 🚨 NAYA: Yahan humne apni CSS file link kar di
 
 const Home: React.FC = () => {
   return (
     <Helmet title="Home | intwit">
-      <div className="home-container" style={{ 
-        display: "flex", 
-        justifyContent: "space-between", 
-        padding: "20px",
-        maxWidth: "1100px",
-        margin: "0 auto" 
-      }}>
+      <div className="home-container">
         
         {/* Posts wala area */}
-        <div className="posts-section" style={{ flex: "1", maxWidth: "630px" }}>
-          
-          {/*  NEW INSTAGRAM STORIES BAR YAHAN DIKHEGA  */}
+        <div className="posts-section">
           <StoriesBar />
-          
           <PostList />
         </div>
 
         {/* Suggestion wala area */}
-        <div className="suggestions-section" style={{ width: "320px", marginLeft: "30px" }}>
-           <div style={{ position: "sticky", top: "20px" }}>
+        <div className="suggestions-section">
+           <div className="sticky-suggestion">
               <SuggestionUser />
            </div>
         </div>

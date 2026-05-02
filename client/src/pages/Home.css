@@ -1,0 +1,40 @@
+/* --- DESKTOP VIEW --- */
+.home-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.posts-section {
+  flex: 1;
+  max-width: 630px;
+}
+
+.suggestions-section {
+  width: 320px;
+  margin-left: 30px;
+}
+
+.sticky-suggestion {
+  position: sticky;
+  top: 20px;
+}
+
+
+/* Jab screen mobile size ki hogi, tab ye code chalega */
+@media screen and (max-width: 768px) {
+  .home-container {
+    padding: 0px; 
+  }
+  
+  .posts-section {
+    max-width: 100%; /* Posts ko mobile par 100% jagah dega */
+    width: 100%;
+  }
+
+  .suggestions-section {
+    display: none; /* Right side wale Suggestions ko chupa dega */
+  }
+}
