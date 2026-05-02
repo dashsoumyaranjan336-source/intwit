@@ -98,5 +98,5 @@ app.use("/api", reelRouter);
 
 // Server Start
 httpServer.listen(PORT, () => {
-  console.log(`Server is running at PORT ${PORT}`);
+  
 });

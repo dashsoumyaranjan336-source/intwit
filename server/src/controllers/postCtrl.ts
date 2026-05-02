@@ -35,7 +35,7 @@ const createPost = asyncHandler(
         try {
           music = JSON.parse(music);
         } catch (e) {
-          console.log("Music parsing mein choti si dikkat aayi.");
+          
         }
       }
 
@@ -80,7 +80,7 @@ const createPost = asyncHandler(
       res.json(newPost);
     } catch (err: any) {
       // 🚨 JASOOS: Agar koi bhi error aayi, toh ab wo is terminal mein pakka print hogi!
-      console.log("🚨 CREATE POST ERROR:", err.message);
+      
       res.status(500).json({ msg: err.message });
     }
   }

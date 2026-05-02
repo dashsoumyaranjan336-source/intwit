@@ -234,7 +234,7 @@ const PostModal: React.FC = () => {
         ? JSON.parse((filteredPost as any).music) 
         : (filteredPost as any).music;
     } catch (error) {
-      console.log("Modal mein Music dabba kholne mein dikkat:", error);
+      
     }
   }
 

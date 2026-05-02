@@ -57,7 +57,7 @@ const FollowingModal: React.FC = () => {
         alert("Failed to unfollow");
       }
     } catch (error) {
-      console.log(error);
+      
       alert("Network Error!");
     }
   };

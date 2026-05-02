@@ -42,13 +42,13 @@ const uploadImagesPost = asyncHandler(
       const urls = [];
       const files = req.files as Express.Multer.File[];
 
-      console.log("Backend: Received files count:", files?.length);
+      
 
       for (const file of files) {
         const { path } = file;
         // Hum yahan path ke saath-saath backend terminal mein log bhi dekhenge
         const newpath = await uploader(path);
-        console.log("Backend: Cloudinary Result:", newpath);
+        
         urls.push(newpath);
         if (fs.existsSync(path)) fs.unlinkSync(path);
       }

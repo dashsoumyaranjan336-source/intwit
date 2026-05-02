@@ -111,7 +111,7 @@ const CreatePost: React.FC = () => {
       const res = await axios.get(`https://itunes.apple.com/search?term=${encodeURIComponent(musicQuery)}&entity=song&limit=10`);
       setMusicResults(res.data.results || []);
     } catch (error) {
-      console.log("Music API Error:", error);
+      
     }
     setIsSearchingMusic(false);
   };
@@ -224,7 +224,7 @@ const CreatePost: React.FC = () => {
           const track = mediaStream.getTracks();
           setTracks(track[0]);
         })
-        .catch((err) => console.log(err));
+        
     }
   };
 

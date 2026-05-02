@@ -59,7 +59,7 @@ const SearchBox: React.FC = () => {
 
         setSearchResult(filtered);
       } catch (err) {
-        console.log("Search error:", err);
+        
       }
       setLoading(false);
     };

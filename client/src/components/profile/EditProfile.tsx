@@ -125,7 +125,7 @@ const EditProfile: React.FC<EditProfileProps> = ({ setOnEdit }) => {
         alert(data.msg);
       }
     } catch (error) {
-      console.log(error);
+      
       alert("Network error");
     }
   };

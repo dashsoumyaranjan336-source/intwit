@@ -42,17 +42,17 @@ const CreateReel: React.FC = () => {
       setIsOriginalMuted(false); 
 
       setLoading(true);
-      console.log("1️⃣ Dispatch shuru hua. File data:", file); // 👈 Yeh tracker lagaya hai
+       // 👈 Yeh tracker lagaya hai
       
       // Uploading to backend just like CreatePost
       dispatch(uploadImgPost([file])).then((response) => {
-        console.log("3️⃣ Redux se wapas aaya:", response); // 👈 Yeh tracker lagaya hai
+         // 👈 Yeh tracker lagaya hai
         if (response.payload && response.payload[0]) {
           setVideoUrl(response.payload[0].url); // Save uploaded URL
         }
         setLoading(false);
       }).catch((error) => {
-        console.log("❌ Redux Thunk mein error:", error); // 👈 Yeh tracker lagaya hai
+         // 👈 Yeh tracker lagaya hai
         setLoading(false);
       });
     }

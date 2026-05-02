@@ -45,7 +45,7 @@ const FollowerModal: React.FC = () => {
 
         // 🔥 2. Modal ki list se turant hatao
         setFollowersList((prev) => prev.filter((f) => f._id !== followerId));
-        console.log("Follower Removed from Database!");
+        
 
         // 3. Modal ko band karo bina page refresh kiye
         dispatch(setIsFollowerGlobalState()); 
@@ -55,7 +55,7 @@ const FollowerModal: React.FC = () => {
         alert(`Error: ${errorData.msg || "Failed to remove follower"}`);
       }
     } catch (error) {
-      console.log(error);
+      
       alert("Network Error!");
     }
   };

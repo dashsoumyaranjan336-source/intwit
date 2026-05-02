@@ -123,7 +123,7 @@ const Story: React.FC = () => {
         playingAudio.pause(); 
     }
     const audio = new Audio(url);
-    audio.play().catch(e => console.log("Audio play error:", e));
+    
     setPlayingAudio(audio);
   };
 
@@ -132,7 +132,7 @@ const Story: React.FC = () => {
         if (playingAudio) playingAudio.pause();
         const newAudio = new Audio(url);
         newAudio.loop = true; 
-        newAudio.play().catch(e => console.log("Audio play error:", e));
+      
         setPlayingAudio(newAudio);
     } else {
         playingAudio.loop = true;
@@ -187,7 +187,7 @@ const Story: React.FC = () => {
       
       if (currentStory.audioUrl) {
         storyAudio = new Audio(currentStory.audioUrl);
-        storyAudio.play().catch(e => console.log("Audio play error:", e));
+        
       }
 
       timer = setTimeout(() => {
@@ -311,7 +311,7 @@ const Story: React.FC = () => {
         const compressed = await imageCompression(previewFile, options);
         fileToUpload = new File([compressed], previewFile.name || "story.jpg", { type: compressed.type || "image/jpeg" });
       } catch (compressionErr) {
-        console.log("Compression skipped", compressionErr);
+        
       }
 
       const uploadRes: any = await dispatch(uploadImgPost([fileToUpload]));

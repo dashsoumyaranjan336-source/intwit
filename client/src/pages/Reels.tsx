@@ -19,7 +19,7 @@ const Reels: React.FC = () => {
                 });
                 
                 const data = await res.json();
-                console.log("🎬 BACKEND SE REELS AAYI:", data); // F12 Dabane par dikhega
+                 // F12 Dabane par dikhega
 
                 if (data.reels) {
                     // Privacy & Block Filter
@@ -40,7 +40,7 @@ const Reels: React.FC = () => {
                     setReels([]);
                 }
             } catch (err) {
-                console.log("Fetch Error:", err);
+                
             }
             setLoading(false);
         };
@@ -49,7 +49,7 @@ const Reels: React.FC = () => {
         if (token) {
             getReels();
         } else {
-            console.log(" Token nahi mila, F12 check kar");
+            
         }
     }, [auth]);
 

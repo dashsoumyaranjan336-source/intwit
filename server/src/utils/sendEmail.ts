@@ -22,12 +22,12 @@ export const sendEmail = async (data: ISendEmail) => {
       html: data.html, 
     });
 
-    console.log("✅ Message sent successfully: %s", info.messageId);
+    
 
   } catch (error: any) {
     console.error("❌ Email bhejne mein error aaya:", error.message);
     if (error.responseCode === 535) {
-      console.log("🚨 GOOGLE SECURITY ERROR: Tera Gmail password accept nahi ho raha hai. Tujhe .env mein 'App Password' daalna padega!");
+      
     }
   }
 };

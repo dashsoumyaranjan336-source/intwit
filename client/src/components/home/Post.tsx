@@ -272,7 +272,7 @@ const Post: React.FC<PostProps> = ({ post }) => {
         ? JSON.parse((post as any).music) 
         : (post as any).music;
     } catch (error) {
-      console.log("Music dabba kholne mein dikkat:", error);
+      
     }
   }
 
