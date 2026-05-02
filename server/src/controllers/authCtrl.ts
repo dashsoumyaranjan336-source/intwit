@@ -15,15 +15,21 @@ const registerUser = asyncHandler(
       const { fullname, username, email, password, faceBookId, avatar } =
         req.body;
       const newUserName = username.toLowerCase().replace(/ /g, "");
+      
       const user_name = await User.findOne({ username: newUserName });
-
       if (user_name) {
+        // 🚨 FIX: Yahan 'return' lagana zaroori tha
         res.status(400).json({ msg: "This user name already exists." });
+        return; 
       }
+
       const user_email = await User.findOne({ email });
       if (user_email) {
+        // 🚨 FIX: Yahan bhi 'return' lagaya
         res.status(400).json({ msg: "This email already exists." });
+        return; 
       }
+
       if (password.length < 6) {
         throw new Error("Password must be at least 6 characters.");
       } else {
@@ -70,8 +76,11 @@ const loginFacebookUser = asyncHandler(
         "avatar username fullname followers following"
       );
 
-      if (!findUser) res.status(400).json({ msg: "This user does not exist." });
-      else {
+      if (!findUser) {
+          // 🚨 FIX: Yahan bhi return add kiya safe side ke liye
+          res.status(400).json({ msg: "This user does not exist." });
+          return;
+      } else {
         const refreshToken = await generateRefreshToken(findUser?._id);
         const accesToken = await accessToken(findUser?._id);
 
@@ -144,20 +153,33 @@ const loginUser = asyncHandler(
 );
 
 // handle refresh token
-
 const handleRefreshToken = asyncHandler(
   async (req: IReqAuth, res: Response): Promise<void> => {
     const rfToken = req.cookies.refreshToken;
 
-    if (!rfToken) res.status(400).json({ msg: "Please login now!" });
+    if (!rfToken) {
+        // 🚨 FIX: Return add kiya
+        res.status(400).json({ msg: "Please login now!" });
+        return;
+    }
+    
     const decoded = <IDecodedToken>(
       jwt.verify(rfToken, process.env.REFRESH_TOKEN as any)
     );
-    if (!decoded.id) res.status(400).json({ msg: "Please login now!" });
+    
+    if (!decoded.id) {
+        // 🚨 FIX: Return add kiya
+        res.status(400).json({ msg: "Please login now!" });
+        return;
+    }
 
     const user = await User.findById(decoded.id);
 
-    if (!user) res.status(400).json({ msg: "This account does not exist." });
+    if (!user) {
+        // 🚨 FIX: Return add kiya
+        res.status(400).json({ msg: "This account does not exist." });
+        return;
+    }
 
     const access_token = accessToken(user!._id);
     await User.findOneAndUpdate(
@@ -243,14 +265,13 @@ const forgotPasswordToken = asyncHandler(
     const { email } = req.body;
     const user = await User.findOne({ email });
     
-    // 🚨 YAHAN FIX KIYA HAI: return add kiya hai taaki aage badh ke crash na ho
     if (!user) {
       res.status(400).json({ msg: "User not found with this email" });
       return; 
     }
     
     try {
-      // 🚨 YAHAN FIX KIYA HAI: localhost add kiya hai Vercel ki jagah
+      // 🚨 EK AUR FIX: Yahan localhost:3000 likha hai. Isko live hone ke baad apni Vercel domain se replace karna padega baad mein, par abhi chalne do.
       const resetUrl = `Hi ${user.username},<br>
       Sorry to hear you’re having trouble logging into intwit. We got a message that you forgot your password. If this was you, you can get right back into your account or reset your password now. <a href="http://localhost:3000/reset-password/${
         user.token
@@ -274,7 +295,6 @@ const resetPassword = asyncHandler(
     try {
       const { password, token } = req.body;
 
-      // 🚨 FIX 1: 'refreshToken' ki jagah 'token' kar diya
       const user = await User.findOne({
         token: token,
       }).populate(
@@ -282,7 +302,6 @@ const resetPassword = asyncHandler(
         "avatar username fullname followers following"
       );
       
-      // 🚨 FIX 2: return laga diya taaki error aane par crash na ho
       if (!user) {
         res.status(400).json({ msg: "Token Expired, please try again later" });
         return;
@@ -297,6 +316,7 @@ const resetPassword = asyncHandler(
     }
   }
 );
+
 export {
   registerUser,
   loginUser,
