@@ -27,7 +27,7 @@ import { ExpressPeerServer } from "peer";
 // 1. Configuration load karein
 dotenv.config();
 
-// 2. Database Connection Call (Ye line sabse zaroori thi!)
+// 2. Database Connection Call
 dbConnect();
 
 const app = express();
@@ -35,11 +35,21 @@ const PORT: string | number = process.env.PORT || 4000;
 
 const httpServer = createServer(app);
 
+
+// UPDATE: TypeScript ko bataya ki ye array sirf strings lega aur undefined ko handle kiya
+const allowedOrigins: string[] = [
+  process.env.URL_FRONTEND as string, 
+  "http://localhost:3000",
+  "http://localhost:5173",
+  "https://intwit.vercel.app",
+  "https://intwit-jy8h1ua0e-dashsoumyaranjan336-2280s-projects.vercel.app"
+].filter(Boolean); // .filter(Boolean) runtime pe kisi bhi undefined ya empty value ko hata dega
+
 // Socket.io setup
 const io = new Server(httpServer, {
   cors: { 
-    origin: ["https://intwit.vercel.app", "http://localhost:3000"], 
-    methods: ["GET", "POST", "PATCH", "PUT", "DELETE"], 
+    origin: allowedOrigins, 
+    methods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"], // OPTIONS zaroori hai
     credentials: true
   },
   allowEIO3: true,
@@ -48,8 +58,8 @@ const io = new Server(httpServer, {
 
 // CORS configuration
 const corsOptions = {
-  origin: ["https://intwit.vercel.app", "http://localhost:3000"],
-  methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
+  origin: allowedOrigins,
+  methods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"], // OPTIONS zaroori hai
   credentials: true,
   optionsSuccessStatus: 200,
 };
