@@ -48,7 +48,6 @@ const Login: React.FC = () => {
     }
   }, [user, navigate]);
 
-  //  useEffect hata diya! Ab state turant update hogi bina delay ke
   const isFormValid = 
     formik.values.email.length >= 1 && 
     formik.values.password.length >= 6 && 
@@ -78,7 +77,6 @@ const Login: React.FC = () => {
                 </div>
               ) : null}
 
-              {/*  Wapas div use kiya, aur input ka padding adjust kiya */}
               <div 
                 className="pass" 
                 style={{ position: "relative", display: "flex", alignItems: "center" }}
@@ -96,7 +94,7 @@ const Login: React.FC = () => {
                     border: "none", 
                     outline: "none", 
                     background: "transparent",
-                    paddingRight: "50px" // Show button ke liye jagah chhodi
+                    paddingRight: "50px" 
                   }}
                 />
                 <span 
@@ -109,7 +107,6 @@ const Login: React.FC = () => {
                     userSelect: "none",
                     zIndex: 10
                   }}
-                  // 🔥 FIX 3: onClick ki jagah onMouseDown use kiya (Pehle click par 100% chalega)
                   onMouseDown={(e) => {
                     e.preventDefault(); 
                     setTypePass(!typePass);
@@ -119,7 +116,6 @@ const Login: React.FC = () => {
                 </span>
               </div>
 
-              {/*   Button direct isFormValid variable se control hoga */}
               <button
                 type="submit"
                 className={`form-btn ${isFormValid ? "active-btn" : "pe-none"}`}
@@ -134,10 +130,17 @@ const Login: React.FC = () => {
                 <FaceBookLogin title="Log in with Facebook" />
               </div>
 
+              {/* 🔥 FIX ADDED HERE: Dynamic Error Handling */}
               <div className="invalid-feedback">
-                {message === "Rejected"
-                  ? "Sorry, your password was incorrect. Please double-check your password."
-                  : ""}
+                {message && (
+                  <span style={{ color: "#ed4956", fontSize: "14px", marginTop: "10px", display: "block", textAlign: "center" }}>
+                    {message === "Rejected" || message.includes("401") || message.toLowerCase().includes("incorrect")
+                      ? "Sorry, your password was incorrect. Please double-check your password."
+                      : message.toLowerCase().includes("not exist") 
+                        ? "User does not exist. Please sign up first."
+                        : message}
+                  </span>
+                )}
               </div>
               
               <Link className="password-reset" to="/forgot-password">
