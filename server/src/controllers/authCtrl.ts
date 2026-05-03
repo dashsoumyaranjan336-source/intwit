@@ -116,7 +116,11 @@ const loginUser = asyncHandler(
       // check if user exists or not
       const findUser = await User.findOne({ email });
 
-      if (!findUser) throw new Error("This email does not exist.");
+      // 🔥 FIX YAHAN HAI: Throw error ki jagah direct JSON response bheja 404 status ke sath
+      if (!findUser) {
+        res.status(404).json({ message: "User does not exist. Please sign up first." });
+        return;
+      }
 
       if (findUser && (await findUser.isPasswordMatched(password))) {
         const refreshToken = await generateRefreshToken(findUser?._id);
@@ -144,7 +148,9 @@ const loginUser = asyncHandler(
 
         res.json(updateuser);
       } else {
-        throw new Error("Password is incorrect");
+        // 🔥 FIX: Password galat hone par bhi proper status code ke sath JSON response
+        res.status(401).json({ message: "Password is incorrect" });
+        return;
       }
     } catch (err: any) {
       throw new Error(err);
@@ -271,7 +277,6 @@ const forgotPasswordToken = asyncHandler(
     }
     
     try {
-      // 🚨 EK AUR FIX: Yahan localhost:3000 likha hai. Isko live hone ke baad apni Vercel domain se replace karna padega baad mein, par abhi chalne do.
       const resetUrl = `Hi ${user.username},<br>
       Sorry to hear you’re having trouble logging into intwit. We got a message that you forgot your password. If this was you, you can get right back into your account or reset your password now. <a href="http://localhost:3000/reset-password/${
         user.token
