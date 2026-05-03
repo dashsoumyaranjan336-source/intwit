@@ -22,12 +22,20 @@ const register = async (user: UserRegister) => {
 };
 
 const login = async (user: UserLogin) => {
-  const response = await axios.post(`${BASE_URL}/auth/login`, user);
-  if (response.data) {
-    localStorage.setItem("user", JSON.stringify(response.data));
+  try {
+    const response = await axios.post(`${BASE_URL}/auth/login`, user);
+    if (response.data) {
+      localStorage.setItem("user", JSON.stringify(response.data));
+    }
+    return response.data;
+  } catch (error: any) {
+    // 🔥 FIX YAHAN HAI: Backend ka error message extract karke throw kar rahe hain
+    if (error.response && error.response.data && error.response.data.message) {
+      // Yeh direct wahi message throw karega jo backend ne bheja hai
+      throw new Error(error.response.data.message);
+    }
+    throw error;
   }
-
-  return response.data;
 };
 
 const loginFacebookUser = async (data: UserLoginFaceBook) => {
@@ -38,6 +46,7 @@ const loginFacebookUser = async (data: UserLoginFaceBook) => {
 
   return response.data;
 };
+
 const resetPassword = async (data: IResetPassword) => {
   const response = await axios.post(`${BASE_URL}/auth/reset-password/`, data);
   if (response.data) {
@@ -45,29 +54,33 @@ const resetPassword = async (data: IResetPassword) => {
   }
   return response.data;
 };
+
 const refreshToken = async () => {
-  const firstLogin = getTokenFromLocalStorage().token;
+  const firstLogin = getTokenFromLocalStorage()?.token; // Added optional chaining just in case
 
   if (firstLogin) {
     const response = await axios.post(`${BASE_URL}/auth/refresh`);
     if (response.data) {
       const userString = localStorage.getItem("user");
-      const user = JSON.parse(userString!);
-
-      // Update the "token" property of the user object
-      user.token = response.data;
-      localStorage.setItem("user", JSON.stringify(user));
+      if (userString) {
+        const user = JSON.parse(userString);
+        // Update the "token" property of the user object
+        user.token = response.data;
+        localStorage.setItem("user", JSON.stringify(user));
+      }
     }
 
     return response.data;
   }
 };
+
 const logout = async () => {
   await axios.post(`${BASE_URL}/auth/logout`);
   localStorage.removeItem("user");
 
   window.location.href = "/";
 };
+
 const editUser = async (user: UserEdit) => {
   const response = await axios.put(`${BASE_URL}/auth`, user, config());
   if (response.data) {
@@ -82,6 +95,7 @@ const getCurrentUser = async () => {
 
   return response.data;
 };
+
 const forgotPassword = async (data: IForgotPassword) => {
   const response = await axios.post(`${BASE_URL}/auth/forgot-password`, data);
 
