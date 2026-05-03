@@ -29,68 +29,77 @@ export const login = createAsyncThunk(
   async (userData: UserLogin, thunkAPI) => {
     try {
       return await authService.login(userData);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
+    } catch (error: any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        (error.response &&
+          error.response.data &&
+          error.response.data.msg) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
 export const loginFacebookUser = createAsyncThunk(
   "auth/login-facebook",
-  async (data: UserLoginFaceBook) => {
+  async (data: UserLoginFaceBook, thunkAPI) => {
     try {
       return await authService.loginFacebookUser(data);
     } catch (error: any) {
-      if (error.response) {
-        throw new Error(error.response.data.msg);
-      } else {
-        throw error;
-      }
+      const message =
+        (error.response && error.response.data && error.response.data.msg) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
 export const resetPassword = createAsyncThunk(
   "auth/reset-password",
-  async (data: IResetPassword) => {
+  async (data: IResetPassword, thunkAPI) => {
     try {
       return await authService.resetPassword(data);
     } catch (error: any) {
-      if (error.response) {
-        throw new Error(error.response.data.msg);
-      } else {
-        throw error;
-      }
+      const message =
+        (error.response && error.response.data && error.response.data.msg) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
 export const register = createAsyncThunk(
   "auth/register",
-  async (userData: UserRegister) => {
+  async (userData: UserRegister, thunkAPI) => {
     try {
       return await authService.register(userData);
     } catch (error: any) {
-      if (error.response) {
-        throw new Error(error.response.data.msg);
-      } else {
-        throw error;
-      }
+      const message =
+        (error.response && error.response.data && error.response.data.msg) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
 export const refreshToken = createAsyncThunk(
   "auth/refresh-token",
-  async (_) => {
+  async (_, thunkAPI) => {
     try {
       return await authService.refreshToken();
     } catch (error: any) {
-      if (error.response) {
-        throw new Error(error.response.data.msg);
-      } else {
-        throw error;
-      }
+      const message =
+        (error.response && error.response.data && error.response.data.msg) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -98,8 +107,9 @@ export const refreshToken = createAsyncThunk(
 export const logout = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
   try {
     return await authService.logout();
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error);
+  } catch (error: any) {
+    const message = error.message || error.toString();
+    return thunkAPI.rejectWithValue(message);
   }
 });
 
@@ -108,8 +118,9 @@ export const editUser = createAsyncThunk(
   async (userData: UserEdit, thunkAPI) => {
     try {
       return await authService.editUser(userData);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
+    } catch (error: any) {
+      const message = error.message || error.toString();
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -119,8 +130,9 @@ export const getCurrentUser = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       return await authService.getCurrentUser();
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
+    } catch (error: any) {
+      const message = error.message || error.toString();
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -130,8 +142,9 @@ export const follow = createAsyncThunk(
   async (id: string, thunkAPI) => {
     try {
       return await userService.followUser(id);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
+    } catch (error: any) {
+      const message = error.message || error.toString();
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -141,20 +154,22 @@ export const unFollow = createAsyncThunk(
   async (id: string, thunkAPI) => {
     try {
       return await userService.unFollowUser(id);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
+    } catch (error: any) {
+      const message = error.message || error.toString();
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
-// 🚫 BLOCK USER THUNK ADDED
+// 🚫 BLOCK USER THUNK
 export const blockUser = createAsyncThunk(
   "auth/block-user",
   async ({ id }: { id: string; auth: any }, thunkAPI) => {
     try {
       return await userService.blockUser(id); 
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
+    } catch (error: any) {
+      const message = error.message || error.toString();
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -175,15 +190,15 @@ export const setUnFollowerUserSocket = createAsyncThunk(
 
 export const forgotPassword = createAsyncThunk(
   "auth/forgot-password",
-  async (data: IForgotPassword) => {
+  async (data: IForgotPassword, thunkAPI) => {
     try {
       return await authService.forgotPassword(data);
     } catch (error: any) {
-      if (error.response) {
-        throw new Error(error.response.data.msg);
-      } else {
-        throw error;
-      }
+      const message =
+        (error.response && error.response.data && error.response.data.msg) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -212,13 +227,11 @@ export const authSlice = createSlice({
   name: "auth",
   initialState: initialState,
   reducers: {
-    // Turant Following ginti kam karne ke liye
     removeFollowingLocally: (state, action: PayloadAction<string>) => {
       if (state.user) {
         state.user.following = state.user.following.filter(
           (item: any) => item._id !== action.payload && item !== action.payload
         );
-        // LocalStorage ko bhi update karo taaki reload pe data maintain rahe
         const userString = localStorage.getItem("user");
         if (userString) {
             const user = JSON.parse(userString);
@@ -227,13 +240,11 @@ export const authSlice = createSlice({
         }
       }
     },
-    //   Turant Follower ginti kam karne ke liye
     removeFollowerLocally: (state, action: PayloadAction<string>) => {
       if (state.user) {
         state.user.followers = state.user.followers.filter(
           (item: any) => item._id !== action.payload && item !== action.payload
         );
-        // LocalStorage ko bhi update karo
         const userString = localStorage.getItem("user");
         if (userString) {
             const user = JSON.parse(userString);
@@ -258,7 +269,7 @@ export const authSlice = createSlice({
       .addCase(login.rejected, (state, action) => {
         state.isError = true;
         state.isSuccess = false;
-        state.message = action.error.message ?? "An error occurred.";
+        state.message = (action.payload as string) ?? action.error.message ?? "An error occurred.";
         state.isLoading = false;
       })
       .addCase(register.pending, (state) => {
@@ -274,7 +285,7 @@ export const authSlice = createSlice({
       .addCase(register.rejected, (state, action) => {
         state.isError = true;
         state.isSuccess = false;
-        state.message = action.error.message || "An error occurred.";
+        state.message = (action.payload as string) ?? action.error.message ?? "An error occurred.";
         state.isLoading = false;
       })
       .addCase(loginFacebookUser.pending, (state) => {
@@ -290,7 +301,7 @@ export const authSlice = createSlice({
       .addCase(loginFacebookUser.rejected, (state, action) => {
         state.isError = true;
         state.isSuccess = false;
-        state.message = action.error.message || "An error occurred.";
+        state.message = (action.payload as string) ?? action.error.message ?? "An error occurred.";
         state.isLoading = false;
       })
       .addCase(resetPassword.pending, (state) => {
@@ -306,7 +317,7 @@ export const authSlice = createSlice({
       .addCase(resetPassword.rejected, (state, action) => {
         state.isError = true;
         state.isSuccess = false;
-        state.message = action.error.message || "An error occurred.";
+        state.message = (action.payload as string) ?? action.error.message ?? "An error occurred.";
         state.isLoading = false;
       })
       .addCase(refreshToken.pending, (state) => {
@@ -316,13 +327,16 @@ export const authSlice = createSlice({
         state.isError = false;
         state.isLoading = false;
         state.isSuccess = true;
-        state.user!.token = action.payload;
+        // 🔥 YAHAN HAI FIX 🔥
+        if (state.user) {
+          state.user.token = action.payload;
+        }
         state.message = "success";
       })
       .addCase(refreshToken.rejected, (state, action) => {
         state.isError = true;
         state.isSuccess = false;
-        state.message = action.error.message || "An error occurred.";
+        state.message = (action.payload as string) ?? action.error.message ?? "An error occurred.";
         state.isLoading = false;
       })
       .addCase(logout.pending, (state) => {
@@ -338,7 +352,7 @@ export const authSlice = createSlice({
       .addCase(logout.rejected, (state, action) => {
         state.isError = true;
         state.isSuccess = false;
-        state.message = action.error.message ?? "An error occurred.";
+        state.message = (action.payload as string) ?? action.error.message ?? "An error occurred.";
         state.isLoading = false;
       })
       .addCase(editUser.pending, (state) => {
@@ -354,7 +368,7 @@ export const authSlice = createSlice({
       .addCase(editUser.rejected, (state, action) => {
         state.isError = true;
         state.isSuccess = false;
-        state.message = action.error.message ?? "An error occurred.";
+        state.message = (action.payload as string) ?? action.error.message ?? "An error occurred.";
         state.isLoading = false;
       })
       .addCase(getCurrentUser.pending, (state) => {
@@ -370,7 +384,7 @@ export const authSlice = createSlice({
       .addCase(getCurrentUser.rejected, (state, action) => {
         state.isError = true;
         state.isSuccess = false;
-        state.message = action.error.message ?? "An error occurred.";
+        state.message = (action.payload as string) ?? action.error.message ?? "An error occurred.";
         state.isLoading = false;
       })
       .addCase(follow.pending, (state) => {
@@ -386,7 +400,7 @@ export const authSlice = createSlice({
       .addCase(follow.rejected, (state, action) => {
         state.isError = true;
         state.isSuccess = false;
-        state.message = action.error.message ?? "An error occurred.";
+        state.message = (action.payload as string) ?? action.error.message ?? "An error occurred.";
         state.isLoading = false;
       })
       .addCase(unFollow.pending, (state) => {
@@ -402,7 +416,7 @@ export const authSlice = createSlice({
       .addCase(unFollow.rejected, (state, action) => {
         state.isError = true;
         state.isSuccess = false;
-        state.message = action.error.message ?? "An error occurred.";
+        state.message = (action.payload as string) ?? action.error.message ?? "An error occurred.";
         state.isLoading = false;
       })
       .addCase(setFollowerUserSocket.pending, (state) => {
@@ -422,7 +436,7 @@ export const authSlice = createSlice({
       .addCase(setFollowerUserSocket.rejected, (state, action) => {
         state.isError = true;
         state.isSuccess = false;
-        state.message = action.error.message ?? "An error occurred.";
+        state.message = (action.payload as string) ?? action.error.message ?? "An error occurred.";
         state.isLoading = false;
       })
       .addCase(setUnFollowerUserSocket.pending, (state) => {
@@ -442,11 +456,11 @@ export const authSlice = createSlice({
       .addCase(setUnFollowerUserSocket.rejected, (state, action) => {
         state.isError = true;
         state.isSuccess = false;
-        state.message = action.error.message ?? "An error occurred.";
+        state.message = (action.payload as string) ?? action.error.message ?? "An error occurred.";
         state.isLoading = false;
       })
       
-      // 🚫 2. BLOCK USER CASES (Error-Free)
+      // 🚫 2. BLOCK USER CASES
       .addCase(blockUser.pending, (state) => {
         state.isLoading = true;
       })
@@ -475,7 +489,7 @@ export const authSlice = createSlice({
       .addCase(blockUser.rejected, (state, action) => {
         state.isError = true;
         state.isSuccess = false;
-        state.message = action.error.message ?? "Block failed";
+        state.message = (action.payload as string) ?? action.error.message ?? "Block failed";
         state.isLoading = false;
       })
 
@@ -492,7 +506,7 @@ export const authSlice = createSlice({
       .addCase(forgotPassword.rejected, (state, action) => {
         state.isError = true;
         state.isSuccess = false;
-        state.message = action.error.message ?? "An error occurred.";
+        state.message = (action.payload as string) ?? action.error.message ?? "An error occurred.";
         state.isLoading = false;
       })
       .addCase(setNullUser.pending, (state) => {
@@ -508,7 +522,7 @@ export const authSlice = createSlice({
       .addCase(setNullUser.rejected, (state, action) => {
         state.isError = true;
         state.isSuccess = false;
-        state.message = action.error.message ?? "An error occurred.";
+        state.message = (action.payload as string) ?? action.error.message ?? "An error occurred.";
         state.isLoading = false;
       })
       .addCase(setCreatePost.pending, (state) => {
@@ -528,7 +542,7 @@ export const authSlice = createSlice({
       .addCase(setCreatePost.rejected, (state, action) => {
         state.isError = true;
         state.isSuccess = false;
-        state.message = action.error.message ?? "An error occurred.";
+        state.message = (action.payload as string) ?? action.error.message ?? "An error occurred.";
         state.isLoading = false;
       })
       .addCase(setDeletePost.pending, (state) => {
@@ -548,7 +562,7 @@ export const authSlice = createSlice({
       .addCase(setDeletePost.rejected, (state, action) => {
         state.isError = true;
         state.isSuccess = false;
-        state.message = action.error.message ?? "An error occurred.";
+        state.message = (action.payload as string) ?? action.error.message ?? "An error occurred.";
         state.isLoading = false;
       });
   },

@@ -40,13 +40,28 @@ const Login: React.FC = () => {
   const [typePass, setTypePass] = useState<boolean>(false);
 
   const { auth } = useSelector((state: RootState) => state);
-  const { user, message } = auth;
+  
+  // 🔥 YAHAN MERA FIX HAI: 'isError' ko state se nikala
+  const { user, message, isError } = auth;
 
   useEffect(() => {
     if (user) {
       navigate("/");
     }
   }, [user, navigate]);
+
+  // 🔥 YAHAN TERA POP-UP WALA JADOO HAI 🔥
+  useEffect(() => {
+    if (isError && message) {
+      if (message.toLowerCase().includes("not exist")) {
+        alert("⚠️ User does not exist. Please sign up first.");
+      } else if (message.toLowerCase().includes("incorrect") || message.includes("401")) {
+        alert("⚠️ Sorry, your password was incorrect.");
+      } else {
+        alert("⚠️ Login Failed: " + message);
+      }
+    }
+  }, [isError, message]);
 
   const isFormValid = 
     formik.values.email.length >= 1 && 
@@ -130,9 +145,9 @@ const Login: React.FC = () => {
                 <FaceBookLogin title="Log in with Facebook" />
               </div>
 
-              {/* 🔥 FIX ADDED HERE: Dynamic Error Handling */}
+              {/* Form ke neeche wala laal text */}
               <div className="invalid-feedback">
-                {message && (
+                {isError && message && (
                   <span style={{ color: "#ed4956", fontSize: "14px", marginTop: "10px", display: "block", textAlign: "center" }}>
                     {message === "Rejected" || message.includes("401") || message.toLowerCase().includes("incorrect")
                       ? "Sorry, your password was incorrect. Please double-check your password."
